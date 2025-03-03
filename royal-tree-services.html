@@ -1,0 +1,2934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Tree Services - Client Tracker</title>
+    <style>
+        :root {
+            --primary-color: #2c7a2a;
+            --primary-dark: #1c5a1a;
+            --primary-light: #3c8a3a;
+            --secondary-color: #8c6d2f;
+            --accent-color: #d9b362;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-light: #ffffff;
+            --bg-light: #f5f5f5;
+            --bg-dark: #333333;
+            --bg-card: #ffffff;
+            --border-color: #dddddd;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            
+            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-md: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            
+            --border-radius-sm: 0.25rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 1rem;
+            
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            --shadow-lg: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+            
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            font-size: var(--font-size-md);
+            color: var(--text-primary);
+            background-color: var(--bg-light);
+            line-height: 1.6;
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: var(--spacing-sm) var(--spacing-md);
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-md);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: var(--spacing-md) 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo svg {
+            margin-right: var(--spacing-sm);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-left: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            transition: background-color var(--transition-speed);
+        }
+
+        nav a:hover, nav a:focus {
+            background-color: var(--primary-dark);
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-card h3 {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-value {
+            font-size: var(--font-size-xl);
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Client Table */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            width: 100%;
+            font-size: var(--font-size-md);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-xs) var(--spacing-md);
+            font-size: var(--font-size-md);
+            cursor: pointer;
+            transition: background-color var(--transition-speed);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button svg {
+            margin-right: var(--spacing-xs);
+        }
+
+        button:hover, button:focus {
+            background-color: var(--primary-dark);
+            outline: none;
+        }
+
+        button.secondary {
+            background-color: var(--secondary-color);
+        }
+
+        button.secondary:hover, button.secondary:focus {
+            background-color: #7c5d1f;
+        }
+
+        button.danger {
+            background-color: var(--danger-color);
+        }
+
+        button.danger:hover, button.danger:focus {
+            background-color: #d32f2f;
+        }
+
+        button.sm {
+            font-size: var(--font-size-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+        }
+
+        button:disabled {
+            background-color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .table-container {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-light);
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background-color: var(--primary-dark);
+        }
+
+        th::after {
+            content: "";
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        th.asc::after {
+            content: "▲";
+        }
+
+        th.desc::after {
+            content: "▼";
+        }
+
+        tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-new {
+            background-color: var(--info-color);
+            color: var(--text-light);
+        }
+
+        .status-quote {
+            background-color: var(--warning-color);
+            color: var(--text-light);
+        }
+
+        .status-active {
+            background-color: var(--success-color);
+            color: var(--text-light);
+        }
+
+        .status-completed {
+            background-color: var(--secondary-color);
+            color: var(--text-light);
+        }
+
+        .status-inactive {
+            background-color: var(--text-secondary);
+            color: var(--text-light);
+        }
+
+        .priority-low {
+            border-left: 4px solid #8bc34a;
+        }
+
+        .priority-medium {
+            border-left: 4px solid #ffc107;
+        }
+
+        .priority-high {
+            border-left: 4px solid #ff9800;
+        }
+
+        .priority-urgent {
+            border-left: 4px solid #f44336;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: var(--spacing-md);
+            gap: var(--spacing-xs);
+        }
+
+        .pagination button {
+            min-width: 35px;
+            height: 35px;
+            padding: 0;
+        }
+
+        .pagination button.active {
+            background-color: var(--primary-dark);
+        }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: var(--font-size-lg);
+            font-weight: bold;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: var(--font-size-xl);
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .modal-body {
+            padding: var(--spacing-md);
+        }
+
+        .modal-footer {
+            padding: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+        }
+
+        /* Forms */
+        form {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        input, textarea, select {
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            font-family: var(--font-family);
+            font-size: var(--font-size-md);
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(44, 122, 42, 0.2);
+        }
+
+        .form-error {
+            color: var(--danger-color);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* Toast notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .toast {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            min-width: 300px;
+            max-width: 400px;
+            animation: toastFadeIn 0.3s ease-out;
+        }
+
+        @keyframes toastFadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast-success {
+            border-left: 4px solid var(--success-color);
+        }
+
+        .toast-error {
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .toast-warning {
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .toast-info {
+            border-left: 4px solid var(--info-color);
+        }
+
+        .toast-icon {
+            margin-right: var(--spacing-sm);
+            flex-shrink: 0;
+        }
+
+        .toast-content {
+            flex-grow: 1;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: var(--spacing-xs);
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* App background */
+        body {
+            background-color: #f8f9fa;
+            background-image: linear-gradient(315deg, #fcfcfc 0%, #eff5ef 74%);
+            min-height: 100vh;
+        }
+
+        /* Theme styles */
+        body.dark {
+            --primary-color: #1b5e1a;
+            --primary-dark: #0d4a0c;
+            --primary-light: #2c7a2a;
+            --secondary-color: #6d5424;
+            --accent-color: #b39242;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --text-light: #ffffff;
+            --bg-light: #222222;
+            --bg-dark: #111111;
+            --bg-card: #333333;
+            --border-color: #444444;
+            
+            background-color: #222222;
+            background-image: linear-gradient(315deg, #1a1a1a 0%, #2a2a2a 74%);
+            color: var(--text-primary);
+        }
+
+        body.forest {
+            --primary-color: #2e8b57;
+            --primary-dark: #1e6e3c;
+            --primary-light: #3ea76c;
+            --secondary-color: #8b4513;
+            --accent-color: #deb887;
+            --text-primary: #333333;
+            --text-secondary: #555555;
+            --text-light: #ffffff;
+            --bg-light: #f0f7f0;
+            --bg-dark: #2c3e2c;
+            --bg-card: #ffffff;
+            --border-color: #c8d6c8;
+            
+            background-color: #f0f7f0;
+            background-image: linear-gradient(315deg, #e8f3e8 0%, #f0f7f0 74%);
+        }
+
+        /* Checkbox styles */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-right: var(--spacing-sm);
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Reports styles */
+        .reports-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .report-results {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .report-results h3 {
+            margin-bottom: var(--spacing-md);
+            color: var(--primary);
+        }
+
+        .report-summary {
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-sm);
+            background-color: rgba(0, 0, 0, 0.03);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .report-table {
+            width: 100%;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .report-table th {
+            background-color: var(--primary-light);
+            color: var(--text-light);
+            text-align: left;
+            padding: var(--spacing-sm);
+        }
+
+        .report-table td {
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .report-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: var(--spacing-md);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: var(--spacing-md);
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-bar {
+                max-width: 100%;
+            }
+            
+            .table-container {
+                overflow-x: auto;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .modal {
+                max-width: 95%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation for elements */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* For screen readers only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus visible utility */
+        .focus-visible:focus {
+            outline: 2px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+
+        /* Modal styles */
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        .modal {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        /* Clients Modal Styles */
+        .clients-modal-content {
+            padding: 0 1rem 1rem;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .view-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .view-filters button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .view-filters button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .view-toggle button {
+            padding: 0.4rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .view-toggle button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .client-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .client-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .client-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .client-card-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-card-header);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .client-card-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .client-card-body {
+            padding: 1rem;
+        }
+        
+        .client-card-body p {
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+        
+        .client-card-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .client-list table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .client-list th,
+        .client-list td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .client-list th {
+            background-color: var(--bg-card-header);
+            font-weight: 600;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        /* Priority colors in client cards */
+        .client-card.priority-urgent {
+            border-left: 4px solid var(--urgent);
+        }
+        
+        .client-card.priority-high {
+            border-left: 4px solid var(--high-priority);
+        }
+        
+        .client-card.priority-medium {
+            border-left: 4px solid var(--medium-priority);
+        }
+        
+        .client-card.priority-low {
+            border-left: 4px solid var(--low-priority);
+        }
+        
+        @media (max-width: 768px) {
+            .client-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .view-filters {
+                width: 100%;
+                overflow-x: auto;
+                padding-bottom: 0.5rem;
+                justify-content: flex-start;
+            }
+            
+            .client-list {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Load dependencies -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Application code -->
+    <script type="text/babel">
+        // Type definitions
+        // @ts-check
+
+        /**
+         * @typedef {Object} Client
+         * @property {string} id - Unique identifier
+         * @property {string} name - Client name
+         * @property {string} email - Client email
+         * @property {string} phone - Client phone
+         * @property {string} address - Client address
+         * @property {string} serviceNeeds - Description of tree service needs
+         * @property {string} locationDetails - Additional location information
+         * @property {'New'|'Quote'|'Active'|'Completed'|'Inactive'} status - Current client status
+         * @property {'Low'|'Medium'|'High'|'Urgent'} priority - Client priority level
+         * @property {string} inquiryDate - Date of initial inquiry
+         * @property {string} createdAt - Record creation timestamp
+         * @property {string} updatedAt - Record update timestamp
+         * @property {string} notes - Additional notes
+         * @property {Object} customFields - Any additional custom fields
+         */
+
+        /**
+         * @typedef {Object} ToastMessage
+         * @property {string} id - Unique identifier
+         * @property {string} message - Toast message content
+         * @property {'success'|'error'|'warning'|'info'} type - Toast type
+         * @property {number} duration - Display duration in milliseconds
+         */
+        
+        /**
+         * Database class for handling localStorage operations
+         */
+        const Database = (() => {
+            const STORAGE_KEY = 'royal_tree_clients';
+            
+            /**
+             * Get all clients from localStorage
+             * @returns {Client[]}
+             */
+            const getAll = () => {
+                const clients = localStorage.getItem(STORAGE_KEY);
+                return clients ? JSON.parse(clients) : [];
+            };
+            
+            /**
+             * Save clients to localStorage
+             * @param {Client[]} clients - Array of client objects
+             */
+            const saveAll = (clients) => {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+            };
+            
+            /**
+             * Add a new client
+             * @param {Omit<Client, 'id'|'createdAt'|'updatedAt'>} client - New client data
+             * @returns {Client} - Newly created client with ID and timestamps
+             */
+            const add = (client) => {
+                const clients = getAll();
+                const newClient = {
+                    ...client,
+                    id: generateId(),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                clients.push(newClient);
+                saveAll(clients);
+                return newClient;
+            };
+            
+            /**
+             * Update an existing client
+             * @param {string} id - Client ID to update
+             * @param {Partial<Client>} updates - Client data to update
+             * @returns {Client|null} - Updated client or null if not found
+             */
+            const update = (id, updates) => {
+                const clients = getAll();
+                const index = clients.findIndex(client => client.id === id);
+                if (index === -1) return null;
+                
+                const updatedClient = {
+                    ...clients[index],
+                    ...updates,
+                    updatedAt: new Date().toISOString()
+                };
+                clients[index] = updatedClient;
+                saveAll(clients);
+                return updatedClient;
+            };
+            
+            /**
+             * Delete a client
+             * @param {string} id - Client ID to delete
+             * @returns {boolean} - Success status
+             */
+            const remove = (id) => {
+                const clients = getAll();
+                const filteredClients = clients.filter(client => client.id !== id);
+                if (filteredClients.length === clients.length) return false;
+                saveAll(filteredClients);
+                return true;
+            };
+            
+            /**
+             * Get a single client by ID
+             * @param {string} id - Client ID
+             * @returns {Client|undefined} - Client data or undefined if not found
+             */
+            const getById = (id) => {
+                const clients = getAll();
+                return clients.find(client => client.id === id);
+            };
+            
+            /**
+             * Export all client data as JSON string
+             * @returns {string} - JSON string of all clients
+             */
+            const exportData = () => {
+                return localStorage.getItem(STORAGE_KEY) || '[]';
+            };
+            
+            /**
+             * Import client data from JSON string
+             * @param {string} jsonData - JSON string of clients to import
+             * @returns {boolean} - Success status
+             */
+            const importData = (jsonData) => {
+                try {
+                    const clients = JSON.parse(jsonData);
+                    if (!Array.isArray(clients)) return false;
+                    saveAll(clients);
+                    return true;
+                } catch (e) {
+                    console.error('Import failed:', e);
+                    return false;
+                }
+            };
+            
+            /**
+             * Generate a unique ID
+             * @returns {string} - Unique ID
+             */
+            const generateId = () => {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            };
+            
+            /**
+             * Initialize with sample data if empty
+             */
+            const initialize = () => {
+                const clients = getAll();
+                if (clients.length === 0) {
+                    // Add sample data
+                    const sampleClients = [
+                        {
+                            name: 'John Smith',
+                            email: 'john.smith@example.com',
+                            phone: '(555) 123-4567',
+                            address: '123 Oak Street, Treeville',
+                            serviceNeeds: 'Tree trimming and removal',
+                            locationDetails: 'Large oak in backyard, difficult access',
+                            status: 'Active',
+                            priority: 'Medium',
+                            inquiryDate: '2023-05-15',
+                            notes: 'Has used our services before, prefers weekday appointments',
+                            customFields: {}
+                        },
+                        {
+                            name: 'Sarah Johnson',
+                            email: 'sarah.j@example.com',
+                            phone: '(555) 987-6543',
+                            address: '456 Maple Ave, Forestville',
+                            serviceNeeds: 'Stump grinding',
+                            locationDetails: 'Front yard, easy access',
+                            status: 'Quote',
+                            priority: 'Low',
+                            inquiryDate: '2023-06-01',
+                            notes: 'Found us through website, first-time customer',
+                            customFields: {}
+                        },
+                        {
+                            name: 'James Wilson',
+                            email: 'jwilson@example.com',
+                            phone: '(555) 456-7890',
+                            address: '789 Pine Road, Woodland',
+                            serviceNeeds: 'Emergency tree removal',
+                            locationDetails: 'Fallen tree on garage',
+                            status: 'New',
+                            priority: 'Urgent',
+                            inquiryDate: '2023-06-10',
+                            notes: 'Insurance claim pending, needs immediate attention',
+                            customFields: {}
+                        }
+                    ];
+                    
+                    sampleClients.forEach(client => add(client));
+                }
+            };
+            
+            return {
+                getAll,
+                getById,
+                add,
+                update,
+                remove,
+                exportData,
+                importData,
+                initialize
+            };
+        })();
+
+        /**
+         * Utility functions
+         */
+        const Utils = (() => {
+            /**
+             * Format a date string
+             * @param {string} dateString - ISO date string
+             * @returns {string} - Formatted date
+             */
+            const formatDate = (dateString) => {
+                const date = new Date(dateString);
+                return new Intl.DateTimeFormat('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                }).format(date);
+            };
+            
+            /**
+             * Debounce a function
+             * @param {Function} func - Function to debounce
+             * @param {number} wait - Wait time in milliseconds
+             * @returns {Function} - Debounced function
+             */
+            const debounce = (func, wait) => {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            };
+            
+            /**
+             * Download data as a file
+             * @param {string} content - File content
+             * @param {string} fileName - File name
+             * @param {string} contentType - MIME type
+             */
+            const downloadFile = (content, fileName, contentType) => {
+                const a = document.createElement('a');
+                const file = new Blob([content], { type: contentType });
+                a.href = URL.createObjectURL(file);
+                a.download = fileName;
+                a.click();
+                URL.revokeObjectURL(a.href);
+            };
+            
+            return {
+                formatDate,
+                debounce,
+                downloadFile
+            };
+        })();
+
+        // React components
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+
+        /**
+         * Enhanced button click handler for tracking button interactions
+         * @param {Function} handler - The original click handler
+         * @param {string} buttonName - Name of the button for tracking
+         * @returns {Function} - Enhanced handler function
+         */
+        const enhanceButtonHandler = (handler, buttonName) => {
+            return (...args) => {
+                console.log(`Button clicked: ${buttonName}`);
+                return handler(...args);
+            };
+        };
+
+        /**
+         * Toast notification component
+         */
+        const Toast = ({ toast, onClose }) => {
+            useEffect(() => {
+                const timer = setTimeout(() => {
+                    onClose(toast.id);
+                }, toast.duration);
+                
+                return () => clearTimeout(timer);
+            }, [toast, onClose]);
+            
+            return (
+                <div className={`toast toast-${toast.type}`}>
+                    <div className="toast-icon">
+                        {toast.type === 'success' && '✅'}
+                        {toast.type === 'error' && '❌'}
+                        {toast.type === 'warning' && '⚠️'}
+                        {toast.type === 'info' && 'ℹ️'}
+                    </div>
+                    <div className="toast-content">{toast.message}</div>
+                    <button className="toast-close" onClick={() => onClose(toast.id)}>×</button>
+                </div>
+            );
+        };
+
+        /**
+         * Toast container component
+         */
+        const ToastContainer = ({ toasts, onClose }) => {
+            return (
+                <div className="toast-container" role="alert" aria-live="polite">
+                    {toasts.map(toast => (
+                        <Toast key={toast.id} toast={toast} onClose={onClose} />
+                    ))}
+                </div>
+            );
+        };
+
+        /**
+         * Modal component
+         */
+        const Modal = ({ title, isOpen, onClose, children, footer }) => {
+            const modalRef = useRef(null);
+            
+            useEffect(() => {
+                if (isOpen) {
+                    // Focus trap
+                    const focusableElements = modalRef.current.querySelectorAll(
+                        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+                    );
+                    
+                    const firstElement = focusableElements[0];
+                    const lastElement = focusableElements[focusableElements.length - 1];
+                    
+                    const handleTabKey = (e) => {
+                        if (e.key === 'Tab') {
+                            if (e.shiftKey && document.activeElement === firstElement) {
+                                e.preventDefault();
+                                lastElement.focus();
+                            } else if (!e.shiftKey && document.activeElement === lastElement) {
+                                e.preventDefault();
+                                firstElement.focus();
+                            }
+                        }
+                    };
+                    
+                    const handleEscape = (e) => {
+                        if (e.key === 'Escape') {
+                            onClose();
+                        }
+                    };
+                    
+                    document.addEventListener('keydown', handleTabKey);
+                    document.addEventListener('keydown', handleEscape);
+                    
+                    // Focus the first element
+                    firstElement.focus();
+                    
+                    // Prevent scrolling on body
+                    document.body.style.overflow = 'hidden';
+                    
+                    return () => {
+                        document.removeEventListener('keydown', handleTabKey);
+                        document.removeEventListener('keydown', handleEscape);
+                        document.body.style.overflow = 'auto';
+                    };
+                }
+            }, [isOpen, onClose]);
+            
+            if (!isOpen) return null;
+            
+            return (
+                <div className="modal-backdrop" onClick={onClose}>
+                    <div 
+                        className="modal" 
+                        ref={modalRef} 
+                        onClick={e => e.stopPropagation()}
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="modal-title"
+                    >
+                        <div className="modal-header">
+                            <h2 className="modal-title" id="modal-title">{title}</h2>
+                            <button 
+                                className="modal-close"
+                                onClick={onClose}
+                                aria-label="Close"
+                            >
+                                ×
+                            </button>
+                        </div>
+                        <div className="modal-body">{children}</div>
+                        {footer && <div className="modal-footer">{footer}</div>}
+                    </div>
+                </div>
+            );
+        };
+
+        /**
+         * Client form component
+         */
+        const ClientForm = ({ client, onSubmit, onCancel }) => {
+            const initialFormState = {
+                name: client?.name || '',
+                email: client?.email || '',
+                phone: client?.phone || '',
+                address: client?.address || '',
+                serviceNeeds: client?.serviceNeeds || '',
+                locationDetails: client?.locationDetails || '',
+                status: client?.status || 'New',
+                priority: client?.priority || 'Medium',
+                inquiryDate: client?.inquiryDate || new Date().toISOString().split('T')[0],
+                notes: client?.notes || '',
+                customFields: client?.customFields || {}
+            };
+            
+            const [formData, setFormData] = useState(initialFormState);
+            const [errors, setErrors] = useState({});
+            
+            const handleChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({
+                    ...prev,
+                    [name]: value
+                }));
+                
+                // Clear error when field is changed
+                if (errors[name]) {
+                    setErrors(prev => ({
+                        ...prev,
+                        [name]: null
+                    }));
+                }
+            };
+            
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.name.trim()) {
+                    newErrors.name = 'Name is required';
+                }
+                
+                if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email)) {
+                    newErrors.email = 'Valid email is required';
+                }
+                
+                if (!formData.phone.trim()) {
+                    newErrors.phone = 'Phone number is required';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+            
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    onSubmit(formData);
+                }
+            };
+            
+            return (
+                <form onSubmit={handleSubmit}>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="name">Name *</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.name ? 'true' : 'false'}
+                            />
+                            {errors.name && <div className="form-error">{errors.name}</div>}
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="email">Email</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                aria-invalid={errors.email ? 'true' : 'false'}
+                            />
+                            {errors.email && <div className="form-error">{errors.email}</div>}
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="phone">Phone *</label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.phone ? 'true' : 'false'}
+                            />
+                            {errors.phone && <div className="form-error">{errors.phone}</div>}
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="address">Address</label>
+                            <input
+                                type="text"
+                                id="address"
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="serviceNeeds">Service Needs</label>
+                            <input
+                                type="text"
+                                id="serviceNeeds"
+                                name="serviceNeeds"
+                                value={formData.serviceNeeds}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="locationDetails">Location Details</label>
+                            <input
+                                type="text"
+                                id="locationDetails"
+                                name="locationDetails"
+                                value={formData.locationDetails}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="status">Status</label>
+                            <select
+                                id="status"
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                            >
+                                <option value="New">New</option>
+                                <option value="Quote">Quote</option>
+                                <option value="Active">Active</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="priority">Priority</label>
+                            <select
+                                id="priority"
+                                name="priority"
+                                value={formData.priority}
+                                onChange={handleChange}
+                            >
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="inquiryDate">Inquiry Date</label>
+                            <input
+                                type="date"
+                                id="inquiryDate"
+                                name="inquiryDate"
+                                value={formData.inquiryDate}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label htmlFor="notes">Notes</label>
+                        <textarea
+                            id="notes"
+                            name="notes"
+                            rows="4"
+                            value={formData.notes}
+                            onChange={handleChange}
+                        ></textarea>
+                    </div>
+                    
+                    <div className="modal-footer">
+                        <button type="button" onClick={onCancel} className="secondary">
+                            Cancel
+                        </button>
+                        <button type="submit">
+                            {client ? 'Update Client' : 'Add Client'}
+                        </button>
+                    </div>
+                </form>
+            );
+        };
+
+        /**
+         * Dashboard component
+         */
+        const Dashboard = ({ clients }) => {
+            // Calculate dashboard statistics
+            const stats = useMemo(() => {
+                const totalClients = clients.length;
+                
+                const statusCounts = {
+                    New: 0,
+                    Quote: 0,
+                    Active: 0,
+                    Completed: 0,
+                    Inactive: 0
+                };
+                
+                const priorityCounts = {
+                    Low: 0,
+                    Medium: 0,
+                    High: 0,
+                    Urgent: 0
+                };
+                
+                clients.forEach(client => {
+                    if (statusCounts[client.status] !== undefined) {
+                        statusCounts[client.status]++;
+                    }
+                    
+                    if (priorityCounts[client.priority] !== undefined) {
+                        priorityCounts[client.priority]++;
+                    }
+                });
+                
+                return {
+                    totalClients,
+                    statusCounts,
+                    priorityCounts
+                };
+            }, [clients]);
+            
+            return (
+                <div className="dashboard">
+                    <div className="stat-card">
+                        <h3>Total Clients</h3>
+                        <div className="stat-value">{stats.totalClients}</div>
+                    </div>
+                    
+                    <div className="stat-card">
+                        <h3>Active Clients</h3>
+                        <div className="stat-value">{stats.statusCounts.Active}</div>
+                    </div>
+                    
+                    <div className="stat-card">
+                        <h3>Pending Quotes</h3>
+                        <div className="stat-value">{stats.statusCounts.Quote}</div>
+                    </div>
+                    
+                    <div className="stat-card">
+                        <h3>High Priority</h3>
+                        <div className="stat-value">{stats.priorityCounts.High + stats.priorityCounts.Urgent}</div>
+                    </div>
+                </div>
+            );
+        };
+
+        /**
+         * Settings form component
+         */
+        const SettingsForm = ({ settings, onSubmit, onCancel }) => {
+            const initialFormState = {
+                companyName: settings?.companyName || 'Royal Tree Services',
+                contactEmail: settings?.contactEmail || 'contact@royaltreeservices.com',
+                contactPhone: settings?.contactPhone || '(555) 123-4567',
+                address: settings?.address || '123 Forest Lane, Treeville',
+                itemsPerPage: settings?.itemsPerPage || 10,
+                defaultSort: settings?.defaultSort || 'name',
+                defaultSortDirection: settings?.defaultSortDirection || 'asc',
+                theme: settings?.theme || 'light',
+                notificationEnabled: settings?.notificationEnabled !== undefined ? settings?.notificationEnabled : true
+            };
+            
+            const [formData, setFormData] = useState(initialFormState);
+            const [errors, setErrors] = useState({});
+            
+            const handleChange = (e) => {
+                const { name, value, type, checked } = e.target;
+                setFormData(prev => ({
+                    ...prev,
+                    [name]: type === 'checkbox' ? checked : value
+                }));
+                
+                // Clear error when field is changed
+                if (errors[name]) {
+                    setErrors(prev => ({
+                        ...prev,
+                        [name]: null
+                    }));
+                }
+            };
+            
+            const validateForm = () => {
+                const newErrors = {};
+                
+                if (!formData.companyName.trim()) {
+                    newErrors.companyName = 'Company name is required';
+                }
+                
+                if (!formData.contactEmail.trim()) {
+                    newErrors.contactEmail = 'Contact email is required';
+                } else if (!/^\S+@\S+\.\S+$/.test(formData.contactEmail)) {
+                    newErrors.contactEmail = 'Valid email is required';
+                }
+                
+                if (!formData.contactPhone.trim()) {
+                    newErrors.contactPhone = 'Contact phone is required';
+                }
+                
+                setErrors(newErrors);
+                return Object.keys(newErrors).length === 0;
+            };
+            
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                
+                if (validateForm()) {
+                    onSubmit(formData);
+                }
+            };
+            
+            return (
+                <form onSubmit={handleSubmit}>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="companyName">Company Name *</label>
+                            <input
+                                type="text"
+                                id="companyName"
+                                name="companyName"
+                                value={formData.companyName}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.companyName ? 'true' : 'false'}
+                            />
+                            {errors.companyName && <div className="form-error">{errors.companyName}</div>}
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="contactEmail">Contact Email *</label>
+                            <input
+                                type="email"
+                                id="contactEmail"
+                                name="contactEmail"
+                                value={formData.contactEmail}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.contactEmail ? 'true' : 'false'}
+                            />
+                            {errors.contactEmail && <div className="form-error">{errors.contactEmail}</div>}
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="contactPhone">Contact Phone *</label>
+                            <input
+                                type="tel"
+                                id="contactPhone"
+                                name="contactPhone"
+                                value={formData.contactPhone}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.contactPhone ? 'true' : 'false'}
+                            />
+                            {errors.contactPhone && <div className="form-error">{errors.contactPhone}</div>}
+                        </div>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label htmlFor="address">Business Address</label>
+                        <input
+                            type="text"
+                            id="address"
+                            name="address"
+                            value={formData.address}
+                            onChange={handleChange}
+                        />
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="itemsPerPage">Items Per Page</label>
+                            <select
+                                id="itemsPerPage"
+                                name="itemsPerPage"
+                                value={formData.itemsPerPage}
+                                onChange={handleChange}
+                            >
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="theme">Theme</label>
+                            <select
+                                id="theme"
+                                name="theme"
+                                value={formData.theme}
+                                onChange={handleChange}
+                            >
+                                <option value="light">Light</option>
+                                <option value="dark">Dark</option>
+                                <option value="forest">Forest</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="defaultSort">Default Sort Field</label>
+                            <select
+                                id="defaultSort"
+                                name="defaultSort"
+                                value={formData.defaultSort}
+                                onChange={handleChange}
+                            >
+                                <option value="name">Name</option>
+                                <option value="phone">Phone</option>
+                                <option value="status">Status</option>
+                                <option value="priority">Priority</option>
+                                <option value="inquiryDate">Inquiry Date</option>
+                            </select>
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="defaultSortDirection">Default Sort Direction</label>
+                            <select
+                                id="defaultSortDirection"
+                                name="defaultSortDirection"
+                                value={formData.defaultSortDirection}
+                                onChange={handleChange}
+                            >
+                                <option value="asc">Ascending</option>
+                                <option value="desc">Descending</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label className="checkbox-label">
+                            <input
+                                type="checkbox"
+                                name="notificationEnabled"
+                                checked={formData.notificationEnabled}
+                                onChange={handleChange}
+                            />
+                            Enable Notifications
+                        </label>
+                    </div>
+                    
+                    <div className="modal-footer">
+                        <button type="button" onClick={onCancel} className="secondary">
+                            Cancel
+                        </button>
+                        <button type="submit">
+                            Save Settings
+                        </button>
+                    </div>
+                </form>
+            );
+        };
+
+        /**
+         * Reports component
+         */
+        const ReportsComponent = ({ clients, onClose }) => {
+            const [reportType, setReportType] = useState('status');
+            const [dateRange, setDateRange] = useState('all');
+            const [startDate, setStartDate] = useState('');
+            const [endDate, setEndDate] = useState('');
+            const [generatedReport, setGeneratedReport] = useState(null);
+            
+            // Calculate report data
+            const generateReport = () => {
+                let filteredClients = [...clients];
+                
+                // Apply date filter if custom range is selected
+                if (dateRange === 'custom' && startDate && endDate) {
+                    filteredClients = filteredClients.filter(client => {
+                        const inquiryDate = new Date(client.inquiryDate);
+                        const start = new Date(startDate);
+                        const end = new Date(endDate);
+                        end.setHours(23, 59, 59, 999); // Include the entire end day
+                        
+                        return inquiryDate >= start && inquiryDate <= end;
+                    });
+                } else if (dateRange === 'month') {
+                    // Last 30 days
+                    const thirtyDaysAgo = new Date();
+                    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+                    
+                    filteredClients = filteredClients.filter(client => {
+                        const inquiryDate = new Date(client.inquiryDate);
+                        return inquiryDate >= thirtyDaysAgo;
+                    });
+                } else if (dateRange === 'quarter') {
+                    // Last 90 days
+                    const ninetyDaysAgo = new Date();
+                    ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+                    
+                    filteredClients = filteredClients.filter(client => {
+                        const inquiryDate = new Date(client.inquiryDate);
+                        return inquiryDate >= ninetyDaysAgo;
+                    });
+                } else if (dateRange === 'year') {
+                    // Last 365 days
+                    const yearAgo = new Date();
+                    yearAgo.setDate(yearAgo.getDate() - 365);
+                    
+                    filteredClients = filteredClients.filter(client => {
+                        const inquiryDate = new Date(client.inquiryDate);
+                        return inquiryDate >= yearAgo;
+                    });
+                }
+                
+                // Generate report based on type
+                let reportData = {};
+                
+                if (reportType === 'status') {
+                    reportData = {
+                        title: 'Client Status Report',
+                        labels: ['New', 'Quote', 'Active', 'Completed', 'Inactive'],
+                        data: [0, 0, 0, 0, 0],
+                        total: filteredClients.length
+                    };
+                    
+                    filteredClients.forEach(client => {
+                        switch (client.status) {
+                            case 'New': reportData.data[0]++; break;
+                            case 'Quote': reportData.data[1]++; break;
+                            case 'Active': reportData.data[2]++; break;
+                            case 'Completed': reportData.data[3]++; break;
+                            case 'Inactive': reportData.data[4]++; break;
+                            default: break;
+                        }
+                    });
+                } else if (reportType === 'priority') {
+                    reportData = {
+                        title: 'Client Priority Report',
+                        labels: ['Low', 'Medium', 'High', 'Urgent'],
+                        data: [0, 0, 0, 0],
+                        total: filteredClients.length
+                    };
+                    
+                    filteredClients.forEach(client => {
+                        switch (client.priority) {
+                            case 'Low': reportData.data[0]++; break;
+                            case 'Medium': reportData.data[1]++; break;
+                            case 'High': reportData.data[2]++; break;
+                            case 'Urgent': reportData.data[3]++; break;
+                            default: break;
+                        }
+                    });
+                } else if (reportType === 'service') {
+                    // Group by service needs (simplified)
+                    const serviceGroups = {};
+                    
+                    filteredClients.forEach(client => {
+                        const service = client.serviceNeeds || 'Unspecified';
+                        if (!serviceGroups[service]) {
+                            serviceGroups[service] = 0;
+                        }
+                        serviceGroups[service]++;
+                    });
+                    
+                    const labels = Object.keys(serviceGroups);
+                    const data = labels.map(label => serviceGroups[label]);
+                    
+                    reportData = {
+                        title: 'Service Type Report',
+                        labels,
+                        data,
+                        total: filteredClients.length
+                    };
+                }
+                
+                setGeneratedReport(reportData);
+            };
+            
+            // Handle form submission
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                generateReport();
+            };
+            
+            // Export report as CSV
+            const exportReportCSV = () => {
+                if (!generatedReport) return;
+                
+                let csvContent = `${generatedReport.title}\n\n`;
+                csvContent += `Category,Count,Percentage\n`;
+                
+                generatedReport.labels.forEach((label, index) => {
+                    const count = generatedReport.data[index];
+                    const percentage = generatedReport.total > 0 
+                        ? ((count / generatedReport.total) * 100).toFixed(2) 
+                        : '0.00';
+                    csvContent += `${label},${count},${percentage}%\n`;
+                });
+                
+                csvContent += `\nTotal,${generatedReport.total},100%\n`;
+                
+                // Add date range info
+                const today = new Date().toISOString().split('T')[0];
+                csvContent += `\nReport generated on,${today}\n`;
+                
+                if (dateRange === 'custom' && startDate && endDate) {
+                    csvContent += `Date range,${startDate} to ${endDate}\n`;
+                } else if (dateRange === 'month') {
+                    csvContent += `Date range,Last 30 days\n`;
+                } else if (dateRange === 'quarter') {
+                    csvContent += `Date range,Last 90 days\n`;
+                } else if (dateRange === 'year') {
+                    csvContent += `Date range,Last 365 days\n`;
+                } else {
+                    csvContent += `Date range,All time\n`;
+                }
+                
+                Utils.downloadFile(csvContent, `${generatedReport.title.toLowerCase().replace(/\s+/g, '-')}-${today}.csv`, 'text/csv');
+            };
+            
+            return (
+                <div className="reports-container">
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-row">
+                            <div className="form-group">
+                                <label htmlFor="reportType">Report Type</label>
+                                <select
+                                    id="reportType"
+                                    value={reportType}
+                                    onChange={(e) => setReportType(e.target.value)}
+                                >
+                                    <option value="status">Client Status</option>
+                                    <option value="priority">Client Priority</option>
+                                    <option value="service">Service Types</option>
+                                </select>
+                            </div>
+                            
+                            <div className="form-group">
+                                <label htmlFor="dateRange">Date Range</label>
+                                <select
+                                    id="dateRange"
+                                    value={dateRange}
+                                    onChange={(e) => setDateRange(e.target.value)}
+                                >
+                                    <option value="all">All Time</option>
+                                    <option value="month">Last 30 Days</option>
+                                    <option value="quarter">Last 90 Days</option>
+                                    <option value="year">Last 365 Days</option>
+                                    <option value="custom">Custom Range</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        {dateRange === 'custom' && (
+                            <div className="form-row">
+                                <div className="form-group">
+                                    <label htmlFor="startDate">Start Date</label>
+                                    <input
+                                        type="date"
+                                        id="startDate"
+                                        value={startDate}
+                                        onChange={(e) => setStartDate(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                
+                                <div className="form-group">
+                                    <label htmlFor="endDate">End Date</label>
+                                    <input
+                                        type="date"
+                                        id="endDate"
+                                        value={endDate}
+                                        onChange={(e) => setEndDate(e.target.value)}
+                                        min={startDate}
+                                        required
+                                    />
+                                </div>
+                            </div>
+                        )}
+                        
+                        <div className="form-group">
+                            <button type="submit">Generate Report</button>
+                        </div>
+                    </form>
+                    
+                    {generatedReport && (
+                        <div className="report-results">
+                            <h3>{generatedReport.title}</h3>
+                            
+                            <div className="report-summary">
+                                <p>Total clients: <strong>{generatedReport.total}</strong></p>
+                                
+                                {dateRange === 'custom' && startDate && endDate && (
+                                    <p>Date range: <strong>{startDate} to {endDate}</strong></p>
+                                )}
+                                {dateRange === 'month' && (
+                                    <p>Date range: <strong>Last 30 days</strong></p>
+                                )}
+                                {dateRange === 'quarter' && (
+                                    <p>Date range: <strong>Last 90 days</strong></p>
+                                )}
+                                {dateRange === 'year' && (
+                                    <p>Date range: <strong>Last 365 days</strong></p>
+                                )}
+                                {dateRange === 'all' && (
+                                    <p>Date range: <strong>All time</strong></p>
+                                )}
+                            </div>
+                            
+                            <table className="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Count</th>
+                                        <th>Percentage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {generatedReport.labels.map((label, index) => {
+                                        const count = generatedReport.data[index];
+                                        const percentage = generatedReport.total > 0 
+                                            ? ((count / generatedReport.total) * 100).toFixed(2) 
+                                            : '0.00';
+                                        
+                                        return (
+                                            <tr key={label}>
+                                                <td>{label}</td>
+                                                <td>{count}</td>
+                                                <td>{percentage}%</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                            
+                            <div className="report-actions">
+                                <button onClick={exportReportCSV} className="secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    Export CSV
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                    
+                    <div className="modal-footer">
+                        <button onClick={onClose} className="secondary">Close</button>
+                    </div>
+                </div>
+            );
+        };
+
+        /**
+         * Main application component
+         */
+        const App = () => {
+            // State for clients
+            const [clients, setClients] = useState([]);
+            const [filteredClients, setFilteredClients] = useState([]);
+            const [searchTerm, setSearchTerm] = useState('');
+            const [currentPage, setCurrentPage] = useState(1);
+            const [itemsPerPage, setItemsPerPage] = useState(10);
+            const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
+            
+            // State for modals
+            const [isClientModalOpen, setIsClientModalOpen] = useState(false);
+            const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+            const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+            const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
+            const [isClientsModalOpen, setIsClientsModalOpen] = useState(false);
+            const [currentClient, setCurrentClient] = useState(null);
+            
+            // State for settings
+            const [settings, setSettings] = useState({
+                companyName: 'Royal Tree Services',
+                contactEmail: 'info@royaltreeservices.com',
+                contactPhone: '(555) 123-4567',
+                address: '123 Forest Lane, Treeville, CA 90210',
+                theme: 'light',
+                itemsPerPage: 10,
+                defaultSort: 'name',
+                defaultSortDirection: 'asc',
+                notificationEnabled: true
+            });
+            
+            // State for toasts
+            const [toasts, setToasts] = useState([]);
+            
+            // Expose functions to window for ClientsModal
+            window.setCurrentClient = setCurrentClient;
+            window.setIsClientModalOpen = setIsClientModalOpen;
+            
+            // Initialize database
+            useEffect(() => {
+                console.log('Initializing application...');
+                Database.initialize();
+                loadClients();
+                loadSettings();
+                
+                // Log successful initialization
+                console.log('Application initialized successfully');
+                showToast('Application loaded successfully', 'success');
+            }, []);
+            
+            // Load clients from database
+            const loadClients = () => {
+                console.log('Loading clients from database...');
+                const allClients = Database.getAll();
+                console.log(`Loaded ${allClients.length} clients`);
+                setClients(allClients);
+            };
+            
+            // Load settings from database
+            const loadSettings = () => {
+                const savedSettings = JSON.parse(localStorage.getItem('royal_tree_settings')) || {
+                    theme: 'light',
+                    itemsPerPage: 10,
+                    defaultSort: 'name',
+                    defaultSortDirection: 'asc'
+                };
+                
+                setSettings(savedSettings);
+                
+                // Apply theme from settings
+                if (savedSettings.theme) {
+                    document.documentElement.setAttribute('data-theme', savedSettings.theme);
+                }
+                
+                // Apply items per page from settings
+                if (savedSettings.itemsPerPage) {
+                    setItemsPerPage(parseInt(savedSettings.itemsPerPage));
+                }
+                
+                // Apply default sort from settings
+                if (savedSettings.defaultSort && savedSettings.defaultSortDirection) {
+                    setSortConfig({
+                        key: savedSettings.defaultSort,
+                        direction: savedSettings.defaultSortDirection
+                    });
+                }
+            };
+            
+            // Save settings to localStorage
+            const saveSettings = (newSettings) => {
+                localStorage.setItem('royal_tree_settings', JSON.stringify(newSettings));
+                setSettings(newSettings);
+                
+                // Apply settings
+                setItemsPerPage(parseInt(newSettings.itemsPerPage));
+                setSortConfig({
+                    key: newSettings.defaultSort,
+                    direction: newSettings.defaultSortDirection
+                });
+                
+                // Apply theme
+                document.body.className = newSettings.theme;
+                
+                setIsSettingsModalOpen(false);
+                showToast('Settings saved successfully', 'success');
+            };
+            
+            // Filter and sort clients
+            useEffect(() => {
+                let filtered = [...clients];
+                
+                // Apply search filter
+                if (searchTerm) {
+                    const lowercaseSearch = searchTerm.toLowerCase();
+                    filtered = filtered.filter(client => 
+                        client.name.toLowerCase().includes(lowercaseSearch) ||
+                        client.email.toLowerCase().includes(lowercaseSearch) ||
+                        client.phone.toLowerCase().includes(lowercaseSearch) ||
+                        client.notes.toLowerCase().includes(lowercaseSearch)
+                    );
+                }
+                
+                // Apply sorting
+                if (sortConfig.key) {
+                    filtered.sort((a, b) => {
+                        if (a[sortConfig.key] < b[sortConfig.key]) {
+                            return sortConfig.direction === 'asc' ? -1 : 1;
+                        }
+                        if (a[sortConfig.key] > b[sortConfig.key]) {
+                            return sortConfig.direction === 'asc' ? 1 : -1;
+                        }
+                        return 0;
+                    });
+                }
+                
+                setFilteredClients(filtered);
+                setCurrentPage(1);
+            }, [clients, searchTerm, sortConfig]);
+            
+            // Show toast notification
+            const showToast = (message, type = 'info', duration = 3000) => {
+                const id = Date.now().toString();
+                const toast = { id, message, type, duration };
+                setToasts(prev => [...prev, toast]);
+                return id;
+            };
+            
+            // Close toast notification
+            const closeToast = (id) => {
+                setToasts(prev => prev.filter(toast => toast.id !== id));
+            };
+            
+            // Handle sort
+            const handleSort = (key) => {
+                let direction = 'asc';
+                if (sortConfig.key === key && sortConfig.direction === 'asc') {
+                    direction = 'desc';
+                }
+                setSortConfig({ key, direction });
+            };
+            
+            // Handle search
+            const handleSearch = (e) => {
+                setSearchTerm(e.target.value);
+            };
+            
+            // Handle client form submission
+            const handleClientSubmit = (formData) => {
+                console.log('Submitting client form data:', formData);
+                
+                if (currentClient) {
+                    // Update existing client
+                    const updated = Database.update(currentClient.id, formData);
+                    if (updated) {
+                        loadClients();
+                        showToast('Client updated successfully', 'success');
+                        setIsClientModalOpen(false);
+                    } else {
+                        showToast('Failed to update client', 'error');
+                    }
+                } else {
+                    // Add new client
+                    const added = Database.add(formData);
+                    if (added) {
+                        loadClients();
+                        showToast('Client added successfully', 'success');
+                        setIsClientModalOpen(false);
+                    } else {
+                        showToast('Failed to add client', 'error');
+                    }
+                }
+            };
+            
+            // Handle delete confirmation
+            const handleDeleteConfirm = () => {
+                if (currentClient) {
+                    console.log(`Deleting client: ${currentClient.name} (ID: ${currentClient.id})`);
+                    
+                    const deleted = Database.remove(currentClient.id);
+                    if (deleted) {
+                        loadClients();
+                        showToast('Client deleted successfully', 'success');
+                    } else {
+                        showToast('Failed to delete client', 'error');
+                    }
+                    setIsDeleteModalOpen(false);
+                }
+            };
+            
+            // Handle export data
+            const handleExport = () => {
+                console.log('Exporting client data...');
+                const data = Database.exportData();
+                console.log(`Exporting ${JSON.parse(data).length} client records`);
+                Utils.downloadFile(data, 'royal-tree-clients.json', 'application/json');
+                showToast('Data exported successfully', 'success');
+            };
+            
+            // Handle import data
+            const handleImport = () => {
+                console.log('Initiating import process...');
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) {
+                        console.log('No file selected for import');
+                        return;
+                    }
+                    
+                    console.log(`Selected file: ${file.name}, size: ${file.size} bytes`);
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            console.log('File loaded, attempting to parse and import...');
+                            const jsonData = event.target.result;
+                            const recordCount = JSON.parse(jsonData).length;
+                            console.log(`Importing ${recordCount} client records`);
+                            
+                            const imported = Database.importData(jsonData);
+                            if (imported) {
+                                loadClients();
+                                showToast(`Imported ${recordCount} client records successfully`, 'success');
+                            } else {
+                                showToast('Failed to import data', 'error');
+                            }
+                        } catch (error) {
+                            console.error('Import error:', error);
+                            showToast('Invalid file format', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+            };
+            
+            // Pagination
+            const indexOfLastItem = currentPage * itemsPerPage;
+            const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+            const currentItems = filteredClients.slice(indexOfFirstItem, indexOfLastItem);
+            const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
+            
+            const paginate = (pageNumber) => setCurrentPage(pageNumber);
+            
+            // Handle navigation clicks
+            const handleNavClick = (e, section) => {
+                e.preventDefault();
+                
+                if (section === 'settings') {
+                    setIsSettingsModalOpen(true);
+                } else if (section === 'reports') {
+                    setIsReportsModalOpen(true);
+                } else if (section === 'clients') {
+                    setIsClientsModalOpen(true);
+                }
+            };
+            
+            return (
+                <>
+                    <a href="#main" className="skip-link">Skip to main content</a>
+                    
+                    <header>
+                        <div className="container header-content">
+                            <div className="logo">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 22V18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M12 18C14.7614 18 17 15.7614 17 13C17 10.2386 14.7614 8 12 8C9.23858 8 7 10.2386 7 13C7 15.7614 9.23858 18 12 18Z" fill="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M4.92999 19.07C3.12999 17.27 2 14.76 2 12C2 6.48 6.48 2 12 2C17.52 2 22 6.48 22 12C22 14.76 20.87 17.27 19.07 19.07" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                Royal Tree Services
+                            </div>
+                            
+                            <nav>
+                                <ul>
+                                    <li><a href="#" className="focus-visible">Dashboard</a></li>
+                                    <li><a href="#" className="focus-visible" onClick={(e) => handleNavClick(e, 'clients')}>Clients</a></li>
+                                    <li><a href="#" className="focus-visible" onClick={(e) => handleNavClick(e, 'reports')}>Reports</a></li>
+                                    <li><a href="#" className="focus-visible" onClick={(e) => handleNavClick(e, 'settings')}>Settings</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </header>
+                    
+                    <main id="main" className="container">
+                        <h1>Client Tracker</h1>
+                        
+                        <Dashboard clients={clients} />
+                        
+                        <div className="controls">
+                            <div className="search-bar">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                <input
+                                    type="text"
+                                    placeholder="Search clients..."
+                                    value={searchTerm}
+                                    onChange={handleSearch}
+                                    aria-label="Search clients"
+                                />
+                            </div>
+                            
+                            <div className="action-buttons">
+                                <button onClick={enhanceButtonHandler(() => {
+                                    setCurrentClient(null);
+                                    setIsClientModalOpen(true);
+                                }, "Add Client")}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    Add Client
+                                </button>
+                                
+                                <button onClick={enhanceButtonHandler(handleExport, "Export Data")} className="secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    Export
+                                </button>
+                                
+                                <button onClick={enhanceButtonHandler(handleImport, "Import Data")} className="secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 13M12 13L7 8M12 13V3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    Import
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="table-container">
+                            <table aria-label="Client list">
+                                <thead>
+                                    <tr>
+                                        <th 
+                                            onClick={() => handleSort('name')}
+                                            className={sortConfig.key === 'name' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'name' ? sortConfig.direction : 'none'}
+                                        >
+                                            Name
+                                        </th>
+                                        <th 
+                                            onClick={() => handleSort('phone')}
+                                            className={sortConfig.key === 'phone' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'phone' ? sortConfig.direction : 'none'}
+                                        >
+                                            Phone
+                                        </th>
+                                        <th 
+                                            onClick={() => handleSort('status')}
+                                            className={sortConfig.key === 'status' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'status' ? sortConfig.direction : 'none'}
+                                        >
+                                            Status
+                                        </th>
+                                        <th 
+                                            onClick={() => handleSort('priority')}
+                                            className={sortConfig.key === 'priority' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'priority' ? sortConfig.direction : 'none'}
+                                        >
+                                            Priority
+                                        </th>
+                                        <th 
+                                            onClick={() => handleSort('inquiryDate')}
+                                            className={sortConfig.key === 'inquiryDate' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'inquiryDate' ? sortConfig.direction : 'none'}
+                                        >
+                                            Inquiry Date
+                                        </th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {currentItems.length > 0 ? (
+                                        currentItems.map(client => (
+                                            <tr key={client.id} className={`priority-${client.priority.toLowerCase()}`}>
+                                                <td>{client.name}</td>
+                                                <td>{client.phone}</td>
+                                                <td>
+                                                    <span className={`status-badge status-${client.status.toLowerCase()}`}>
+                                                        {client.status}
+                                                    </span>
+                                                </td>
+                                                <td>{client.priority}</td>
+                                                <td>{Utils.formatDate(client.inquiryDate)}</td>
+                                                <td>
+                                                    <div className="action-buttons">
+                                                        <button 
+                                                            className="sm"
+                                                            onClick={enhanceButtonHandler(() => {
+                                                                setCurrentClient(client);
+                                                                setIsClientModalOpen(true);
+                                                            }, `Edit ${client.name}`)}
+                                                            aria-label={`Edit ${client.name}`}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button 
+                                                            className="sm danger"
+                                                            onClick={enhanceButtonHandler(() => {
+                                                                setCurrentClient(client);
+                                                                setIsDeleteModalOpen(true);
+                                                            }, `Delete ${client.name}`)}
+                                                            aria-label={`Delete ${client.name}`}
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="6" style={{ textAlign: 'center' }}>
+                                                {clients.length === 0 
+                                                    ? 'No clients found. Add your first client!' 
+                                                    : 'No clients match your search.'}
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {totalPages > 1 && (
+                            <div className="pagination" role="navigation" aria-label="Pagination">
+                                <button 
+                                    onClick={enhanceButtonHandler(() => paginate(1), "First Page")}
+                                    disabled={currentPage === 1}
+                                    aria-label="Go to first page"
+                                >
+                                    ⟪
+                                </button>
+                                <button 
+                                    onClick={enhanceButtonHandler(() => paginate(currentPage - 1), "Previous Page")}
+                                    disabled={currentPage === 1}
+                                    aria-label="Go to previous page"
+                                >
+                                    ⟨
+                                </button>
+                                
+                                {[...Array(totalPages)].map((_, index) => {
+                                    const pageNumber = index + 1;
+                                    // Show limited page numbers
+                                    if (
+                                        pageNumber === 1 ||
+                                        pageNumber === totalPages ||
+                                        (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                                    ) {
+                                        return (
+                                            <button
+                                                key={pageNumber}
+                                                onClick={enhanceButtonHandler(() => paginate(pageNumber), `Page ${pageNumber}`)}
+                                                className={currentPage === pageNumber ? 'active' : ''}
+                                                aria-label={`Page ${pageNumber}`}
+                                                aria-current={currentPage === pageNumber ? 'page' : undefined}
+                                            >
+                                                {pageNumber}
+                                            </button>
+                                        );
+                                    } else if (
+                                        (pageNumber === currentPage - 2 && currentPage > 3) ||
+                                        (pageNumber === currentPage + 2 && currentPage < totalPages - 2)
+                                    ) {
+                                        return <span key={pageNumber}>...</span>;
+                                    }
+                                    return null;
+                                })}
+                                
+                                <button 
+                                    onClick={enhanceButtonHandler(() => paginate(currentPage + 1), "Next Page")}
+                                    disabled={currentPage === totalPages}
+                                    aria-label="Go to next page"
+                                >
+                                    ⟩
+                                </button>
+                                <button 
+                                    onClick={enhanceButtonHandler(() => paginate(totalPages), "Last Page")}
+                                    disabled={currentPage === totalPages}
+                                    aria-label="Go to last page"
+                                >
+                                    ⟫
+                                </button>
+                            </div>
+                        )}
+                    </main>
+                    
+                    <footer className="container">
+                        <p>&copy; {new Date().getFullYear()} Royal Tree Services. All rights reserved.</p>
+                    </footer>
+                    
+                    {/* Client Modal */}
+                    <Modal
+                        title={currentClient ? 'Edit Client' : 'Add New Client'}
+                        isOpen={isClientModalOpen}
+                        onClose={() => setIsClientModalOpen(false)}
+                        children={
+                            <ClientForm
+                                client={currentClient}
+                                onSubmit={handleClientSubmit}
+                                onCancel={() => setIsClientModalOpen(false)}
+                            />
+                        }
+                        footer={null}
+                    />
+                    
+                    {/* Delete Confirmation Modal */}
+                    <Modal
+                        title="Confirm Delete"
+                        isOpen={isDeleteModalOpen}
+                        onClose={() => setIsDeleteModalOpen(false)}
+                        children={
+                            <>
+                                <p>Are you sure you want to delete {currentClient?.name}?</p>
+                                <p>This action cannot be undone.</p>
+                            </>
+                        }
+                        footer={
+                            <div className="modal-footer">
+                                <button 
+                                    onClick={enhanceButtonHandler(() => setIsDeleteModalOpen(false), "Cancel Delete")} 
+                                    className="secondary"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={enhanceButtonHandler(handleDeleteConfirm, "Confirm Delete")} 
+                                    className="danger"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        }
+                    />
+                    
+                    {/* Settings Modal */}
+                    <Modal
+                        title="Settings"
+                        isOpen={isSettingsModalOpen}
+                        onClose={() => setIsSettingsModalOpen(false)}
+                        children={
+                            <SettingsForm
+                                settings={settings}
+                                onSubmit={saveSettings}
+                                onCancel={() => setIsSettingsModalOpen(false)}
+                            />
+                        }
+                        footer={null}
+                    />
+                    
+                    {/* Reports Modal */}
+                    <Modal
+                        title="Reports"
+                        isOpen={isReportsModalOpen}
+                        onClose={() => setIsReportsModalOpen(false)}
+                        children={
+                            <ReportsComponent
+                                clients={clients}
+                                onClose={() => setIsReportsModalOpen(false)}
+                            />
+                        }
+                        footer={null}
+                    />
+                    
+                    {/* Clients Modal */}
+                    <Modal
+                        title="Client Management"
+                        isOpen={isClientsModalOpen}
+                        onClose={() => setIsClientsModalOpen(false)}
+                        children={
+                            <ClientsModal
+                                clients={clients}
+                                onClose={() => setIsClientsModalOpen(false)}
+                            />
+                        }
+                        footer={null}
+                    />
+                    
+                    {/* Toast Notifications */}
+                    <ToastContainer toasts={toasts} onClose={closeToast} />
+                </>
+            );
+        };
+
+        /**
+         * Clients Modal Component
+         * Displays a card view of clients with filtering options
+         */
+        const ClientsModal = ({ clients, onClose }) => {
+            const [viewFilter, setViewFilter] = useState('all');
+            const [clientView, setClientView] = useState('cards');
+            
+            // Filter clients based on the selected filter
+            const filteredModalClients = useMemo(() => {
+                let filtered = [...clients];
+                
+                if (viewFilter === 'active') {
+                    filtered = filtered.filter(client => client.status === 'Active');
+                } else if (viewFilter === 'new') {
+                    filtered = filtered.filter(client => client.status === 'New');
+                } else if (viewFilter === 'quote') {
+                    filtered = filtered.filter(client => client.status === 'Quote');
+                } else if (viewFilter === 'high-priority') {
+                    filtered = filtered.filter(client => 
+                        client.priority === 'High' || client.priority === 'Urgent'
+                    );
+                }
+                
+                return filtered;
+            }, [clients, viewFilter]);
+            
+            const handleViewClient = (client) => {
+                // Close the clients modal
+                onClose();
+                
+                // Set the current client and open the client modal
+                // These functions are available in the parent scope
+                window.setCurrentClient(client);
+                window.setIsClientModalOpen(true);
+            };
+            
+            return (
+                <div className="clients-modal-content">
+                    <div className="filter-controls">
+                        <div className="view-filters">
+                            <button 
+                                className={viewFilter === 'all' ? 'active' : ''} 
+                                onClick={() => setViewFilter('all')}
+                            >
+                                All Clients
+                            </button>
+                            <button 
+                                className={viewFilter === 'active' ? 'active' : ''} 
+                                onClick={() => setViewFilter('active')}
+                            >
+                                Active
+                            </button>
+                            <button 
+                                className={viewFilter === 'new' ? 'active' : ''} 
+                                onClick={() => setViewFilter('new')}
+                            >
+                                New
+                            </button>
+                            <button 
+                                className={viewFilter === 'quote' ? 'active' : ''} 
+                                onClick={() => setViewFilter('quote')}
+                            >
+                                Quote
+                            </button>
+                            <button 
+                                className={viewFilter === 'high-priority' ? 'active' : ''} 
+                                onClick={() => setViewFilter('high-priority')}
+                            >
+                                High Priority
+                            </button>
+                        </div>
+                        
+                        <div className="view-toggle">
+                            <button 
+                                className={clientView === 'cards' ? 'active' : ''} 
+                                onClick={() => setClientView('cards')}
+                                aria-label="Card view"
+                            >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                                    <rect x="14" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="2"/>
+                                </svg>
+                            </button>
+                            <button 
+                                className={clientView === 'list' ? 'active' : ''} 
+                                onClick={() => setClientView('list')}
+                                aria-label="List view"
+                            >
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 6H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M8 12H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M8 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M3 6H3.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M3 12H3.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M3 18H3.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    {clientView === 'cards' ? (
+                        <div className="client-cards">
+                            {filteredModalClients.length > 0 ? (
+                                filteredModalClients.map(client => (
+                                    <div key={client.id} className={`client-card priority-${client.priority.toLowerCase()}`}>
+                                        <div className="client-card-header">
+                                            <h3>{client.name}</h3>
+                                            <span className={`status-badge status-${client.status.toLowerCase()}`}>
+                                                {client.status}
+                                            </span>
+                                        </div>
+                                        <div className="client-card-body">
+                                            <p><strong>Phone:</strong> {client.phone}</p>
+                                            {client.email && <p><strong>Email:</strong> {client.email}</p>}
+                                            {client.address && <p><strong>Address:</strong> {client.address}</p>}
+                                            {client.serviceNeeds && <p><strong>Service:</strong> {client.serviceNeeds}</p>}
+                                            <p><strong>Priority:</strong> {client.priority}</p>
+                                            <p><strong>Inquiry Date:</strong> {Utils.formatDate(client.inquiryDate)}</p>
+                                        </div>
+                                        <div className="client-card-footer">
+                                            <button 
+                                                onClick={() => handleViewClient(client)}
+                                                className="sm"
+                                            >
+                                                View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="no-results">No clients match the selected filter.</div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="client-list">
+                            {filteredModalClients.length > 0 ? (
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Status</th>
+                                            <th>Priority</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filteredModalClients.map(client => (
+                                            <tr key={client.id} className={`priority-${client.priority.toLowerCase()}`}>
+                                                <td>{client.name}</td>
+                                                <td>{client.phone}</td>
+                                                <td>
+                                                    <span className={`status-badge status-${client.status.toLowerCase()}`}>
+                                                        {client.status}
+                                                    </span>
+                                                </td>
+                                                <td>{client.priority}</td>
+                                                <td>
+                                                    <button 
+                                                        onClick={() => handleViewClient(client)}
+                                                        className="sm"
+                                                    >
+                                                        View
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <div className="no-results">No clients match the selected filter.</div>
+                            )}
+                        </div>
+                    )}
+                    
+                    <div className="modal-footer">
+                        <button onClick={onClose} className="secondary">Close</button>
+                    </div>
+                </div>
+            );
+        };
+
+        // Render the application
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
