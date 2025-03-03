@@ -945,8 +945,15 @@
     
     <!-- Application code -->
     <script type="text/babel">
-        // Type definitions
-        // @ts-check
+        // Define window properties using JSDoc
+        /**
+         * @typedef {Object} WindowExtensions
+         * @property {function(any): void} setCurrentClient - Sets the current client
+         * @property {function(boolean): void} setIsClientModalOpen - Controls client modal visibility
+         */
+        
+        // React components
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
         /**
          * @typedef {Object} Client
@@ -1214,9 +1221,6 @@
                 downloadFile
             };
         })();
-
-        // React components
-        const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
         /**
          * Enhanced button click handler for tracking button interactions
