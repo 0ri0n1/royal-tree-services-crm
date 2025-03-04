@@ -1,6 +1,6 @@
 # Royal Tree Services Client Tracker
 
-A comprehensive client management system for Royal Tree Services, designed to track clients, services, and business operations.
+A comprehensive client relationship management system for Royal Tree Services, designed to track clients, services, and business operations.
 
 ## Overview
 
@@ -14,13 +14,18 @@ This application provides a complete solution for managing tree service clients,
 - **User Authentication**: Secure login with role-based permissions (Admin, Manager, Field Technician).
 - **Offline Support**: Continue working without internet connectivity, with automatic synchronization when back online.
 - **Responsive Design**: Works on desktop, tablet, and mobile devices for field use.
+- **Priority-based client categorization**: Organize clients by priority levels.
+- **Status tracking**: Monitor the status of client projects and services.
+- **Reporting functionality**: Generate reports for business insights.
+- **Data import/export**: Easily transfer data in and out of the system.
+- **Theme customization**: Personalize the application appearance.
 
 ## Tech Stack
 
 ### Backend
 - Node.js
 - Express.js
-- MongoDB
+- MongoDB Atlas
 - Mongoose
 - JWT Authentication
 - RESTful API
@@ -29,6 +34,7 @@ This application provides a complete solution for managing tree service clients,
 - HTML5
 - CSS3
 - JavaScript (ES6+)
+- React (future implementation)
 - Fetch API
 - LocalStorage for offline caching
 
@@ -43,7 +49,7 @@ This application provides a complete solution for managing tree service clients,
 ### Prerequisites
 
 - Node.js (v14 or higher)
-- MongoDB (local or Atlas)
+- MongoDB Atlas account
 - Modern web browser
 
 ### Installation
@@ -64,7 +70,7 @@ npm install
 ```
 NODE_ENV=development
 PORT=3000
-MONGODB_URI=mongodb://localhost:27017/royal-tree-services
+MONGODB_URI=your_mongodb_atlas_connection_string
 JWT_SECRET=your_jwt_secret_key_should_be_long_and_secure
 JWT_EXPIRES_IN=90d
 JWT_COOKIE_EXPIRES_IN=90
@@ -86,7 +92,7 @@ cd client
 
 ## Usage
 
-1. Register an admin user through the API or database.
+1. Register an admin user through the API.
 2. Log in to the application.
 3. Add clients and manage their information.
 4. Record services, add notes, and upload documents.
@@ -102,9 +108,9 @@ cd client
 
 ## License
 
-This project is licensed under the MIT License.
+© Royal Tree Services. All rights reserved.
 
 ## Acknowledgements
 
 - Royal Tree Services for the project requirements
-- All contributors to the open-source libraries used in this project 
+- All contributors to the open-source libraries used in this project
