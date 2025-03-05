@@ -261,8 +261,8 @@
         }
 
         th {
-            background-color: var(--primary-light);
-            color: var(--text-light);
+            background-color: var(--bg-light);
+            color: var(--text-primary);
             font-weight: 600;
             cursor: pointer;
             user-select: none;
@@ -270,7 +270,7 @@
         }
 
         th:hover {
-            background-color: var(--primary-dark);
+            background-color: rgba(0, 0, 0, 0.05);
         }
 
         th::after {
@@ -297,6 +297,7 @@
             background-color: rgba(0, 0, 0, 0.05);
         }
 
+        /* Status badge styling */
         .status-badge {
             display: inline-block;
             padding: var(--spacing-xs) var(--spacing-sm);
@@ -305,46 +306,46 @@
             font-weight: bold;
             text-transform: uppercase;
         }
-
+        
         .status-new {
             background-color: var(--info-color);
             color: var(--text-light);
         }
-
+        
         .status-quote {
             background-color: var(--warning-color);
-            color: var(--text-light);
+            color: var(--text-dark);
         }
-
+        
         .status-active {
             background-color: var(--success-color);
             color: var(--text-light);
         }
-
+        
         .status-completed {
             background-color: var(--secondary-color);
             color: var(--text-light);
         }
-
+        
         .status-inactive {
             background-color: var(--text-secondary);
             color: var(--text-light);
         }
 
         .priority-low {
-            border-left: 4px solid #8bc34a;
+            border-left: none;
         }
 
         .priority-medium {
-            border-left: 4px solid #ffc107;
+            border-left: none;
         }
 
         .priority-high {
-            border-left: 4px solid #ff9800;
+            border-left: none;
         }
 
         .priority-urgent {
-            border-left: 4px solid #f44336;
+            border-left: none;
         }
 
         .action-buttons {
@@ -767,9 +768,12 @@
         
         /* Clients Modal Styles */
         .clients-modal-content {
-            padding: 0 1rem 1rem;
+            padding: 1rem;
+            max-height: calc(90vh - 120px);
+            overflow-y: auto;
         }
         
+        /* Filter controls styling */
         .filter-controls {
             display: flex;
             justify-content: space-between;
@@ -777,91 +781,119 @@
             margin-bottom: 1.5rem;
             flex-wrap: wrap;
             gap: 1rem;
+            background-color: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
         }
         
         .view-filters {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
+            align-items: center;
         }
         
         .view-filters button {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.9rem;
-            background: var(--bg-card);
+            padding: 0.5rem 1rem;
+            font-size: var(--font-size-sm);
+            background-color: var(--bg-card);
+            color: var(--text-primary);
             border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--border-radius-md);
             cursor: pointer;
             transition: all 0.2s;
         }
         
+        .view-filters button:hover {
+            background-color: var(--bg-hover);
+        }
+        
         .view-filters button.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border-color: var(--primary-color);
         }
         
         .view-toggle {
             display: flex;
+            align-items: center;
             gap: 0.5rem;
         }
         
         .view-toggle button {
-            padding: 0.4rem;
-            background: var(--bg-card);
+            padding: 0.5rem;
+            background-color: var(--bg-card);
+            color: var(--text-primary);
             border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--border-radius-md);
             cursor: pointer;
             transition: all 0.2s;
         }
         
+        .view-toggle button:hover {
+            background-color: var(--bg-hover);
+        }
+        
         .view-toggle button.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border-color: var(--primary-color);
         }
         
         .client-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
         }
         
         .client-card {
-            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
             border-radius: var(--border-radius-md);
-            overflow: hidden;
-            transition: all 0.2s;
             box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
         }
         
         .client-card:hover {
+            transform: translateY(-5px);
             box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
         }
         
         .client-card-header {
             padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--bg-card-header);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-light);
         }
         
         .client-card-header h3 {
             margin: 0;
-            font-size: 1.1rem;
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
         }
         
         .client-card-body {
             padding: 1rem;
+            color: var(--text-primary);
         }
         
         .client-card-body p {
             margin: 0.5rem 0;
-            font-size: 0.95rem;
+        }
+        
+        .client-dates {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-sm);
+            font-size: var(--font-size-sm);
         }
         
         .client-card-footer {
@@ -871,52 +903,52 @@
             justify-content: flex-end;
         }
         
-        .client-list table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Priority indicators */
+        .priority-indicator {
+            display: inline-block;
+            padding: 0.15rem 0.4rem;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            margin-left: 0.25rem;
         }
         
-        .client-list th,
-        .client-list td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
+        .priority-high {
+            color: var(--danger-color);
         }
         
-        .client-list th {
-            background-color: var(--bg-card-header);
-            font-weight: 600;
+        .priority-medium {
+            color: var(--warning-color);
         }
         
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-style: italic;
+        .priority-low {
+            color: var(--success-color);
         }
         
-        /* Priority colors in client cards */
+        .priority-urgent {
+            color: #f44336;
+        }
+        
+        /* Remove priority border colors for client cards */
+        .client-card.priority-high,
+        .client-card.priority-medium,
+        .client-card.priority-low,
         .client-card.priority-urgent {
-            border-left: 4px solid var(--urgent);
+            border-left: none;
         }
         
-        .client-card.priority-high {
-            border-left: 4px solid var(--high-priority);
+        /* No results styling */
+        .no-results {
+            padding: 2rem;
+            text-align: center;
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            color: var(--text-secondary);
+            font-style: italic;
+            width: 100%;
         }
         
-        .client-card.priority-medium {
-            border-left: 4px solid var(--medium-priority);
-        }
-        
-        .client-card.priority-low {
-            border-left: 4px solid var(--low-priority);
-        }
-        
+        /* Responsive styles */
         @media (max-width: 768px) {
-            .client-cards {
-                grid-template-columns: 1fr;
-            }
-            
             .filter-controls {
                 flex-direction: column;
                 align-items: flex-start;
@@ -926,12 +958,385 @@
                 width: 100%;
                 overflow-x: auto;
                 padding-bottom: 0.5rem;
-                justify-content: flex-start;
             }
             
-            .client-list {
-                overflow-x: auto;
+            .client-cards {
+                grid-template-columns: 1fr;
             }
+        }
+        
+        /* Client list table styles */
+        .client-list {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            background-color: var(--bg-card);
+        }
+        
+        .client-list th {
+            background-color: var(--bg-light);
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .client-list td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            color: var(--text-primary);
+        }
+        
+        .client-list tr:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Priority row styling - use text color instead of border */
+        .client-list tr.priority-high,
+        .client-list tr.priority-medium,
+        .client-list tr.priority-low,
+        .client-list tr.priority-urgent {
+            border-left: none;
+        }
+        
+        /* Search box styles */
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+            margin-right: 1rem;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 0.6rem 2.5rem 0.6rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-md);
+            transition: all 0.2s;
+            background-color: var(--bg-card);
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+            outline: none;
+        }
+        
+        .clear-search {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0.25rem;
+            line-height: 1;
+            border-radius: 50%;
+        }
+        
+        .clear-search:hover {
+            color: var(--danger-color);
+            background-color: rgba(var(--danger-rgb), 0.1);
+        }
+        
+        /* Results counter */
+        .results-counter {
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            display: inline-block;
+        }
+        
+        .results-counter span {
+            font-style: italic;
+        }
+        
+        /* Responsive table */
+        @media (max-width: 992px) {
+            .client-list table {
+                min-width: 800px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .search-box {
+                max-width: 100%;
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+
+        /* Ensure client names and phone numbers are black */
+        .table-container td,
+        .client-list td {
+            color: var(--text-primary) !important;
+        }
+
+        /* Reset any color inheritance from priority classes */
+        tr.priority-high td,
+        tr.priority-medium td,
+        tr.priority-low td,
+        tr.priority-urgent td {
+            color: var(--text-primary) !important;
+        }
+
+        /* Priority Matrix Component */
+        .priority-matrix-container {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .matrix-header {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .matrix-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .matrix-axis-labels {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .y-axis-label, .x-axis-label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .matrix-quadrants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .matrix-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .matrix-quadrant {
+            flex: 1;
+            padding: 1rem;
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quadrant-header {
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .quadrant-clients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .matrix-client-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-sm);
+            padding: 0.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 0.5rem;
+        }
+
+        .matrix-client-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .matrix-client-name {
+            font-weight: bold;
+        }
+
+        .matrix-client-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .matrix-client-quote {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        /* Priority Matrix Component - Enhanced Styling */
+        .matrix-quadrant.q1 {
+            background-color: rgba(244, 67, 54, 0.1); /* Urgent/Important - Light red */
+            border-top: 3px solid var(--danger-color);
+            border-right: 3px solid var(--danger-color);
+        }
+        
+        .matrix-quadrant.q2 {
+            background-color: rgba(33, 150, 243, 0.1); /* Important, Not Urgent - Light blue */
+            border-top: 3px solid var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        .matrix-quadrant.q3 {
+            background-color: rgba(255, 193, 7, 0.1); /* Urgent, Not Important - Light yellow */
+            border-bottom: 3px solid var(--warning-color);
+            border-right: 3px solid var(--warning-color);
+        }
+        
+        .matrix-quadrant.q4 {
+            background-color: rgba(139, 195, 74, 0.1); /* Not Urgent, Not Important - Light green */
+            border-bottom: 3px solid var(--success-color);
+            border-left: 3px solid var(--success-color);
+        }
+        
+        .matrix-client-scores {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Priority Dashboard Styles */
+        .priority-dashboard {
+            margin: var(--spacing-lg) 0;
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .priority-dashboard h2 {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .priority-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+        
+        .priority-column {
+            background-color: var(--bg-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-sm);
+            min-height: 200px;
+        }
+        
+        .priority-urgent-column {
+            border-top: 3px solid var(--danger-color);
+        }
+        
+        .priority-high-column {
+            border-top: 3px solid var(--warning-color);
+        }
+        
+        .priority-medium-column {
+            border-top: 3px solid var(--primary-color);
+        }
+        
+        .priority-low-column {
+            border-top: 3px solid var(--success-color);
+        }
+        
+        .priority-column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-xs);
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .priority-column-header h3 {
+            margin: 0;
+            font-size: var(--font-size-md);
+        }
+        
+        .client-count {
+            background-color: var(--bg-card);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+        }
+        
+        .priority-client-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+        
+        .priority-client-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-sm);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        
+        .priority-client-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .priority-client-name {
+            font-weight: bold;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-primary);
+        }
+        
+        .priority-client-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .client-value-badge {
+            font-size: var(--font-size-xs);
+            background-color: var(--bg-light);
+            padding: 2px 6px;
+            border-radius: var(--border-radius-sm);
+        }
+        
+        .priority-client-date {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+        
+        .empty-priority-message {
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+            padding: var(--spacing-md);
         }
     </style>
 </head>
@@ -1365,11 +1770,15 @@
                 address: client?.address || '',
                 serviceNeeds: client?.serviceNeeds || '',
                 locationDetails: client?.locationDetails || '',
+                quoteAmount: client?.quoteAmount || '',
+                quoteCost: client?.quoteCost || '',
+                scheduledDate: client?.scheduledDate ? new Date(client.scheduledDate).toISOString().split('T')[0] : '',
                 status: client?.status || 'New',
                 priority: client?.priority || 'Medium',
                 inquiryDate: client?.inquiryDate || new Date().toISOString().split('T')[0],
                 notes: client?.notes || '',
-                customFields: client?.customFields || {}
+                customFields: client?.customFields || {},
+                clientValue: client?.clientValue || "5"
             };
             
             const [formData, setFormData] = useState(initialFormState);
@@ -1508,6 +1917,7 @@
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
+                                required
                             >
                                 <option value="New">New</option>
                                 <option value="Quote">Quote</option>
@@ -1515,6 +1925,7 @@
                                 <option value="Completed">Completed</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
+                            {errors.status && <div className="error-message">{errors.status}</div>}
                         </div>
                         
                         <div className="form-group">
@@ -1524,12 +1935,56 @@
                                 name="priority"
                                 value={formData.priority}
                                 onChange={handleChange}
+                                required
                             >
                                 <option value="Low">Low</option>
                                 <option value="Medium">Medium</option>
                                 <option value="High">High</option>
                                 <option value="Urgent">Urgent</option>
                             </select>
+                            {errors.priority && <div className="error-message">{errors.priority}</div>}
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="clientValue">Client Value (1-10)</label>
+                            <input
+                                type="number"
+                                id="clientValue"
+                                name="clientValue"
+                                min="1"
+                                max="10"
+                                value={formData.clientValue || "5"}
+                                onChange={handleChange}
+                            />
+                            <small>Higher values indicate more valuable clients</small>
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="quoteAmount">Quote Amount ($)</label>
+                            <input
+                                type="number"
+                                id="quoteAmount"
+                                name="quoteAmount"
+                                value={formData.quoteAmount}
+                                onChange={handleChange}
+                                min="0"
+                                step="0.01"
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="quoteCost">Quote Cost ($)</label>
+                            <input
+                                type="number"
+                                id="quoteCost"
+                                name="quoteCost"
+                                value={formData.quoteCost}
+                                onChange={handleChange}
+                                min="0"
+                                step="0.01"
+                            />
                         </div>
                     </div>
                     
@@ -1541,6 +1996,17 @@
                                 id="inquiryDate"
                                 name="inquiryDate"
                                 value={formData.inquiryDate}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <label htmlFor="scheduledDate">Scheduled Work Date</label>
+                            <input
+                                type="date"
+                                id="scheduledDate"
+                                name="scheduledDate"
+                                value={formData.scheduledDate}
                                 onChange={handleChange}
                             />
                         </div>
@@ -2154,6 +2620,7 @@
             const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
             const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
             const [isClientsModalOpen, setIsClientsModalOpen] = useState(false);
+            const [isPriorityMatrixModalOpen, setIsPriorityMatrixModalOpen] = useState(false);
             const [currentClient, setCurrentClient] = useState(null);
             
             // State for settings
@@ -2450,6 +2917,8 @@
                         
                         <Dashboard clients={clients} />
                         
+                        <ClientPriorityDashboard clients={filteredClients} />
+                        
                         <div className="controls">
                             <div className="search-bar">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2473,6 +2942,13 @@
                                         <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                                     </svg>
                                     Add Client
+                                </button>
+                                
+                                <button onClick={enhanceButtonHandler(() => setIsPriorityMatrixModalOpen(true), "Priority Matrix")} className="secondary">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3 3V21M3 21H21M3 21L21 3M12 12L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                    </svg>
+                                    Priority Matrix
                                 </button>
                                 
                                 <button onClick={enhanceButtonHandler(handleExport, "Export Data")} className="secondary">
@@ -2524,6 +3000,20 @@
                                             Priority
                                         </th>
                                         <th 
+                                            onClick={() => handleSort('quoteAmount')}
+                                            className={sortConfig.key === 'quoteAmount' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'quoteAmount' ? sortConfig.direction : 'none'}
+                                        >
+                                            Quote Amount
+                                        </th>
+                                        <th 
+                                            onClick={() => handleSort('scheduledDate')}
+                                            className={sortConfig.key === 'scheduledDate' ? sortConfig.direction : ''}
+                                            aria-sort={sortConfig.key === 'scheduledDate' ? sortConfig.direction : 'none'}
+                                        >
+                                            Scheduled Date
+                                        </th>
+                                        <th 
                                             onClick={() => handleSort('inquiryDate')}
                                             className={sortConfig.key === 'inquiryDate' ? sortConfig.direction : ''}
                                             aria-sort={sortConfig.key === 'inquiryDate' ? sortConfig.direction : 'none'}
@@ -2545,6 +3035,8 @@
                                                     </span>
                                                 </td>
                                                 <td>{client.priority}</td>
+                                                <td>{client.quoteAmount ? `$${parseFloat(client.quoteAmount).toFixed(2)}` : '-'}</td>
+                                                <td>{client.scheduledDate ? Utils.formatDate(client.scheduledDate) : '-'}</td>
                                                 <td>{Utils.formatDate(client.inquiryDate)}</td>
                                                 <td>
                                                     <div className="action-buttons">
@@ -2574,7 +3066,7 @@
                                         ))
                                     ) : (
                                         <tr>
-                                            <td colSpan="6" style={{ textAlign: 'center' }}>
+                                            <td colSpan="8" style={{ textAlign: 'center' }}>
                                                 {clients.length === 0 
                                                     ? 'No clients found. Add your first client!' 
                                                     : 'No clients match your search.'}
@@ -2739,6 +3231,20 @@
                         footer={null}
                     />
                     
+                    {/* Priority Matrix Modal */}
+                    <PriorityMatrixModal
+                        isOpen={isPriorityMatrixModalOpen}
+                        onClose={() => setIsPriorityMatrixModalOpen(false)}
+                        clients={clients}
+                        onClientUpdate={(id, updates) => {
+                            const updated = Database.update(id, updates);
+                            if (updated) {
+                                loadClients();
+                                showToast('Client priority updated', 'success');
+                            }
+                        }}
+                    />
+                    
                     {/* Toast Notifications */}
                     <ToastContainer toasts={toasts} onClose={closeToast} />
                 </>
@@ -2752,9 +3258,10 @@
         const ClientsModal = ({ clients, onClose }) => {
             const [viewFilter, setViewFilter] = useState('all');
             const [clientView, setClientView] = useState('cards');
+            const [searchQuery, setSearchQuery] = useState('');
             
-            // Filter clients based on the selected filter
             const filteredModalClients = useMemo(() => {
+                // First filter by view filter
                 let filtered = [...clients];
                 
                 if (viewFilter === 'active') {
@@ -2764,13 +3271,22 @@
                 } else if (viewFilter === 'quote') {
                     filtered = filtered.filter(client => client.status === 'Quote');
                 } else if (viewFilter === 'high-priority') {
+                    filtered = filtered.filter(client => client.priority === 'High');
+                }
+                
+                // Then filter by search query if it exists
+                if (searchQuery.trim() !== '') {
+                    const query = searchQuery.toLowerCase().trim();
                     filtered = filtered.filter(client => 
-                        client.priority === 'High' || client.priority === 'Urgent'
+                        client.name.toLowerCase().includes(query) || 
+                        client.phone.toLowerCase().includes(query) || 
+                        (client.email && client.email.toLowerCase().includes(query)) ||
+                        (client.address && client.address.toLowerCase().includes(query))
                     );
                 }
                 
                 return filtered;
-            }, [clients, viewFilter]);
+            }, [clients, viewFilter, searchQuery]);
             
             const handleViewClient = (client) => {
                 // Close the clients modal
@@ -2785,7 +3301,27 @@
             return (
                 <div className="clients-modal-content">
                     <div className="filter-controls">
+                        <div className="search-box">
+                            <input
+                                type="text"
+                                placeholder="Search clients..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="search-input"
+                            />
+                            {searchQuery && (
+                                <button 
+                                    className="clear-search" 
+                                    onClick={() => setSearchQuery('')}
+                                    aria-label="Clear search"
+                                >
+                                    ×
+                                </button>
+                            )}
+                        </div>
+                        
                         <div className="view-filters">
+                            <h3 style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}>Filter by:</h3>
                             <button 
                                 className={viewFilter === 'all' ? 'active' : ''} 
                                 onClick={() => setViewFilter('all')}
@@ -2819,6 +3355,7 @@
                         </div>
                         
                         <div className="view-toggle">
+                            <h3 style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}>View:</h3>
                             <button 
                                 className={clientView === 'cards' ? 'active' : ''} 
                                 onClick={() => setClientView('cards')}
@@ -2849,7 +3386,13 @@
                     </div>
                     
                     {clientView === 'cards' ? (
-                        <div className="client-cards">
+                        <>
+                            <div className="results-counter">
+                                Showing {filteredModalClients.length} {filteredModalClients.length === 1 ? 'client' : 'clients'}
+                                {searchQuery && <span> matching "{searchQuery}"</span>}
+                                {viewFilter !== 'all' && <span> filtered by {viewFilter}</span>}
+                            </div>
+                            <div className="client-cards">
                             {filteredModalClients.length > 0 ? (
                                 filteredModalClients.map(client => (
                                     <div key={client.id} className={`client-card priority-${client.priority.toLowerCase()}`}>
@@ -2864,13 +3407,23 @@
                                             {client.email && <p><strong>Email:</strong> {client.email}</p>}
                                             {client.address && <p><strong>Address:</strong> {client.address}</p>}
                                             {client.serviceNeeds && <p><strong>Service:</strong> {client.serviceNeeds}</p>}
-                                            <p><strong>Priority:</strong> {client.priority}</p>
-                                            <p><strong>Inquiry Date:</strong> {Utils.formatDate(client.inquiryDate)}</p>
+                                            <p>
+                                                <strong>Priority:</strong> 
+                                                <span className={`priority-indicator priority-${client.priority.toLowerCase()}`}>
+                                                    {client.priority}
+                                                </span>
+                                            </p>
+                                            {client.quoteAmount && <p><strong>Quote Amount:</strong> ${parseFloat(client.quoteAmount).toFixed(2)}</p>}
+                                            
+                                            <div className="client-dates">
+                                                {client.scheduledDate && <p><strong>Scheduled:</strong> {Utils.formatDate(client.scheduledDate)}</p>}
+                                                <p><strong>Inquiry:</strong> {Utils.formatDate(client.inquiryDate)}</p>
+                                            </div>
                                         </div>
                                         <div className="client-card-footer">
                                             <button 
                                                 onClick={() => handleViewClient(client)}
-                                                className="sm"
+                                                className="sm primary"
                                             >
                                                 View Details
                                             </button>
@@ -2880,9 +3433,16 @@
                             ) : (
                                 <div className="no-results">No clients match the selected filter.</div>
                             )}
-                        </div>
+                            </div>
+                        </>
                     ) : (
-                        <div className="client-list">
+                        <>
+                            <div className="results-counter">
+                                Showing {filteredModalClients.length} {filteredModalClients.length === 1 ? 'client' : 'clients'}
+                                {searchQuery && <span> matching "{searchQuery}"</span>}
+                                {viewFilter !== 'all' && <span> filtered by {viewFilter}</span>}
+                            </div>
+                            <div className="client-list">
                             {filteredModalClients.length > 0 ? (
                                 <table>
                                     <thead>
@@ -2891,24 +3451,32 @@
                                             <th>Phone</th>
                                             <th>Status</th>
                                             <th>Priority</th>
+                                            <th>Quote Amount</th>
+                                            <th>Scheduled Date</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {filteredModalClients.map(client => (
                                             <tr key={client.id} className={`priority-${client.priority.toLowerCase()}`}>
-                                                <td>{client.name}</td>
+                                                <td><strong>{client.name}</strong></td>
                                                 <td>{client.phone}</td>
                                                 <td>
                                                     <span className={`status-badge status-${client.status.toLowerCase()}`}>
                                                         {client.status}
                                                     </span>
                                                 </td>
-                                                <td>{client.priority}</td>
+                                                <td>
+                                                    <span className={`priority-indicator priority-${client.priority.toLowerCase()}`}>
+                                                        {client.priority}
+                                                    </span>
+                                                </td>
+                                                <td>{client.quoteAmount ? `$${parseFloat(client.quoteAmount).toFixed(2)}` : '-'}</td>
+                                                <td>{client.scheduledDate ? Utils.formatDate(client.scheduledDate) : '-'}</td>
                                                 <td>
                                                     <button 
                                                         onClick={() => handleViewClient(client)}
-                                                        className="sm"
+                                                        className="sm primary"
                                                     >
                                                         View
                                                     </button>
@@ -2920,11 +3488,345 @@
                             ) : (
                                 <div className="no-results">No clients match the selected filter.</div>
                             )}
-                        </div>
+                            </div>
+                        </>
                     )}
                     
                     <div className="modal-footer">
                         <button onClick={onClose} className="secondary">Close</button>
+                    </div>
+                </div>
+            );
+        };
+
+        /**
+         * Priority Matrix Component
+         * Displays clients in a 2x2 matrix based on value and urgency
+         */
+        const PriorityMatrix = ({ clients, onClientUpdate }) => {
+            // Group clients by their quadrant
+            const [matrixClients, setMatrixClients] = useState({
+                q1: [], // High Value, High Urgency
+                q2: [], // High Value, Low Urgency
+                q3: [], // Low Value, High Urgency
+                q4: []  // Low Value, Low Urgency
+            });
+            
+            // Determine client value score (1-10) based on quote amount and status
+            const calculateValueScore = (client) => {
+                // If client has a manually set value, use that
+                if (client.clientValue) {
+                    return parseInt(client.clientValue);
+                }
+                
+                let score = 5; // Default middle score
+                
+                // Adjust based on quote amount if available
+                if (client.quoteAmount) {
+                    const amount = parseFloat(client.quoteAmount.replace(/[^0-9.-]+/g, ""));
+                    if (amount > 5000) score += 3;
+                    else if (amount > 2000) score += 2;
+                    else if (amount > 1000) score += 1;
+                }
+                
+                // Adjust based on status
+                if (client.status === 'Active') score += 1;
+                else if (client.status === 'Quote') score += 0.5;
+                
+                return Math.min(Math.max(score, 1), 10); // Ensure score is between 1-10
+            };
+            
+            // Determine client urgency score (1-10) based on priority and dates
+            const calculateUrgencyScore = (client) => {
+                let score = 5; // Default middle score
+                
+                // Adjust based on priority
+                if (client.priority === 'Urgent') score += 4;
+                else if (client.priority === 'High') score += 2;
+                else if (client.priority === 'Medium') score += 0;
+                else if (client.priority === 'Low') score -= 2;
+                
+                // Adjust based on scheduled date if available
+                if (client.scheduledDate) {
+                    const daysUntilScheduled = Math.ceil(
+                        (new Date(client.scheduledDate) - new Date()) / (1000 * 60 * 60 * 24)
+                    );
+                    
+                    if (daysUntilScheduled <= 3) score += 2;
+                    else if (daysUntilScheduled <= 7) score += 1;
+                    else if (daysUntilScheduled <= 14) score += 0;
+                    else score -= 1;
+                }
+                
+                return Math.min(Math.max(score, 1), 10); // Ensure score is between 1-10
+            };
+            
+            // Determine which quadrant a client belongs to
+            const getClientQuadrant = (client) => {
+                const valueScore = calculateValueScore(client);
+                const urgencyScore = calculateUrgencyScore(client);
+                
+                if (valueScore >= 6 && urgencyScore >= 6) return 'q1'; // High Value, High Urgency
+                if (valueScore >= 6 && urgencyScore < 6) return 'q2';  // High Value, Low Urgency
+                if (valueScore < 6 && urgencyScore >= 6) return 'q3';  // Low Value, High Urgency
+                return 'q4'; // Low Value, Low Urgency
+            };
+            
+            // Initialize matrix with clients
+            useEffect(() => {
+                const matrix = {
+                    q1: [],
+                    q2: [],
+                    q3: [],
+                    q4: []
+                };
+                
+                clients.forEach(client => {
+                    const quadrant = getClientQuadrant(client);
+                    matrix[quadrant].push({
+                        ...client,
+                        valueScore: calculateValueScore(client),
+                        urgencyScore: calculateUrgencyScore(client)
+                    });
+                });
+                
+                // Sort clients within each quadrant by combined score
+                Object.keys(matrix).forEach(quadrant => {
+                    matrix[quadrant].sort((a, b) => 
+                        (b.valueScore + b.urgencyScore) - (a.valueScore + a.urgencyScore)
+                    );
+                });
+                
+                setMatrixClients(matrix);
+            }, [clients]);
+            
+            // Handle dragging a client to a new quadrant
+            const handleDragEnd = (result) => {
+                if (!result.destination) return;
+                
+                const sourceQuadrant = result.source.droppableId;
+                const destQuadrant = result.destination.droppableId;
+                
+                if (sourceQuadrant === destQuadrant) return;
+                
+                // Get the client that was moved
+                const clientIndex = result.source.index;
+                const client = matrixClients[sourceQuadrant][clientIndex];
+                
+                // Update client priority based on new quadrant
+                let newPriority = client.priority;
+                let newStatus = client.status;
+                
+                if (destQuadrant === 'q1') { // High Value, High Urgency
+                    newPriority = 'Urgent';
+                    if (newStatus === 'New') newStatus = 'Active';
+                } else if (destQuadrant === 'q2') { // High Value, Low Urgency
+                    newPriority = 'Medium';
+                } else if (destQuadrant === 'q3') { // Low Value, High Urgency
+                    newPriority = 'High';
+                } else if (destQuadrant === 'q4') { // Low Value, Low Urgency
+                    newPriority = 'Low';
+                }
+                
+                // Call the update function to persist changes
+                if (newPriority !== client.priority || newStatus !== client.status) {
+                    onClientUpdate(client.id, { 
+                        priority: newPriority,
+                        status: newStatus
+                    });
+                }
+            };
+            
+            // Render a client card in the matrix
+            const renderClientCard = (client, index) => (
+                <div 
+                    key={client.id}
+                    className="matrix-client-card"
+                    draggable
+                    onClick={() => onClientUpdate(client.id, {})} // Just to view the client details
+                >
+                    <div className="matrix-client-name">{client.name}</div>
+                    <div className="matrix-client-details">
+                        <span className={`status-badge status-${client.status.toLowerCase()}`}>
+                            {client.status}
+                        </span>
+                        <span className={`priority-${client.priority.toLowerCase()}`}>
+                            {client.priority}
+                        </span>
+                    </div>
+                    <div className="matrix-client-scores">
+                        <small>Value: {client.valueScore}/10</small>
+                        <small>Urgency: {client.urgencyScore}/10</small>
+                    </div>
+                    {client.quoteAmount && (
+                        <div className="matrix-client-quote">${client.quoteAmount}</div>
+                    )}
+                </div>
+            );
+            
+            return (
+                <div className="priority-matrix-container">
+                    <div className="matrix-header">
+                        <h3>Client Priority Matrix</h3>
+                        <p>Drag clients between quadrants to reprioritize them</p>
+                    </div>
+                    
+                    <div className="matrix-grid">
+                        <div className="matrix-axis-labels">
+                            <div className="y-axis-label">Value</div>
+                            <div className="x-axis-label">Urgency</div>
+                        </div>
+                        
+                        <div className="matrix-quadrants">
+                            <div className="matrix-row">
+                                <div className="matrix-quadrant q2">
+                                    <div className="quadrant-header">
+                                        <h4>High Value, Low Urgency</h4>
+                                        <p>Plan for these clients</p>
+                                    </div>
+                                    <div className="quadrant-clients">
+                                        {matrixClients.q2.map(renderClientCard)}
+                                    </div>
+                                </div>
+                                <div className="matrix-quadrant q1">
+                                    <div className="quadrant-header">
+                                        <h4>High Value, High Urgency</h4>
+                                        <p>Focus on these clients first</p>
+                                    </div>
+                                    <div className="quadrant-clients">
+                                        {matrixClients.q1.map(renderClientCard)}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="matrix-row">
+                                <div className="matrix-quadrant q4">
+                                    <div className="quadrant-header">
+                                        <h4>Low Value, Low Urgency</h4>
+                                        <p>Handle when time permits</p>
+                                    </div>
+                                    <div className="quadrant-clients">
+                                        {matrixClients.q4.map(renderClientCard)}
+                                    </div>
+                                </div>
+                                <div className="matrix-quadrant q3">
+                                    <div className="quadrant-header">
+                                        <h4>Low Value, High Urgency</h4>
+                                        <p>Delegate or handle quickly</p>
+                                    </div>
+                                    <div className="quadrant-clients">
+                                        {matrixClients.q3.map(renderClientCard)}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        /**
+         * Priority Matrix Modal
+         */
+        const PriorityMatrixModal = ({ isOpen, onClose, clients, onClientUpdate }) => {
+            return (
+                <Modal
+                    title="Client Priority Matrix"
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    children={
+                        <PriorityMatrix 
+                            clients={clients} 
+                            onClientUpdate={onClientUpdate}
+                        />
+                    }
+                    footer={
+                        <div className="modal-footer">
+                            <button onClick={onClose}>Close</button>
+                        </div>
+                    }
+                />
+            );
+        };
+
+        /**
+         * Client Priority Dashboard component
+         * Displays a visual representation of client priorities
+         */
+        const ClientPriorityDashboard = ({ clients }) => {
+            // Group clients by priority
+            const priorityGroups = useMemo(() => {
+                const groups = {
+                    Urgent: [],
+                    High: [],
+                    Medium: [],
+                    Low: []
+                };
+                
+                clients.forEach(client => {
+                    if (groups[client.priority]) {
+                        groups[client.priority].push(client);
+                    }
+                });
+                
+                // Sort each group by client value if available, otherwise by name
+                Object.keys(groups).forEach(priority => {
+                    groups[priority].sort((a, b) => {
+                        if (a.clientValue && b.clientValue) {
+                            return parseInt(b.clientValue) - parseInt(a.clientValue);
+                        }
+                        return a.name.localeCompare(b.name);
+                    });
+                });
+                
+                return groups;
+            }, [clients]);
+            
+            return (
+                <div className="priority-dashboard">
+                    <h2>Client Priority Dashboard</h2>
+                    <div className="priority-columns">
+                        {Object.keys(priorityGroups).map(priority => (
+                            <div key={priority} className={`priority-column priority-${priority.toLowerCase()}-column`}>
+                                <div className="priority-column-header">
+                                    <h3>{priority}</h3>
+                                    <span className="client-count">{priorityGroups[priority].length}</span>
+                                </div>
+                                <div className="priority-client-list">
+                                    {priorityGroups[priority].map(client => (
+                                        <div 
+                                            key={client.id} 
+                                            className="priority-client-card"
+                                            onClick={() => {
+                                                window.setCurrentClient(client);
+                                                window.setIsClientModalOpen(true);
+                                            }}
+                                        >
+                                            <div className="priority-client-name">{client.name}</div>
+                                            <div className="priority-client-details">
+                                                <span className={`status-badge status-${client.status.toLowerCase()}`}>
+                                                    {client.status}
+                                                </span>
+                                                {client.clientValue && (
+                                                    <span className="client-value-badge">
+                                                        Value: {client.clientValue}/10
+                                                    </span>
+                                                )}
+                                            </div>
+                                            {client.scheduledDate && (
+                                                <div className="priority-client-date">
+                                                    <small>Scheduled: {new Date(client.scheduledDate).toLocaleDateString()}</small>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                    {priorityGroups[priority].length === 0 && (
+                                        <div className="empty-priority-message">
+                                            No {priority.toLowerCase()} priority clients
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             );

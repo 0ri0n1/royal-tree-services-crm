@@ -29,6 +29,18 @@ const clientSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  quoteAmount: {
+    type: Number,
+    default: 0
+  },
+  quoteCost: {
+    type: Number,
+    default: 0
+  },
+  scheduledDate: {
+    type: Date,
+    default: null
+  },
   status: {
     type: String,
     enum: ['New', 'Quote', 'Active', 'Completed', 'Inactive'],
