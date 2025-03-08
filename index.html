@@ -1907,6 +1907,155 @@
         .marker-completed {
             background-color: var(--success-color);
         }
+
+        .map-error-message {
+            color: var(--danger-color);
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .marker-low {
+            background-color: var(--info-color);
+        }
+
+        .marker-completed {
+            background-color: var(--success-color);
+        }
+        
+        .map-error-message {
+            color: var(--danger-color);
+            text-align: center;
+            margin: 1rem auto;
+            padding: 1rem;
+            background-color: rgba(var(--danger-color-rgb), 0.1);
+            border-radius: var(--border-radius-md);
+            font-weight: 500;
+            max-width: 80%;
+        }
+        
+        .info-window h3 {
+            color: var(--primary-color-dark);
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        
+        .info-window button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        .info-window button:hover {
+            background-color: var(--primary-color-dark);
+        }
+        
+        .map-helper-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .map-helper-buttons button {
+            flex: 1;
+            margin: 0;
+        }
+        
+        .input-with-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .input-with-button input {
+            flex: 1;
+        }
+        
+        button.sm {
+            font-size: var(--font-size-sm);
+            padding: 0.25rem 0.5rem;
+        }
+        
+        /* Coordinate section enhancements */
+        .form-coordinate-note {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 3px solid #6c757d;
+            border-radius: 4px;
+        }
+        
+        /* Optional label styling */
+        .optional-label {
+            font-size: 0.85em;
+            font-weight: normal;
+            color: #6c757d;
+            font-style: italic;
+        }
+        
+        .form-coordinate-note ul {
+            margin-top: 5px;
+            margin-bottom: 0;
+            padding-left: 20px;
+        }
+        
+        .form-coordinate-note li {
+            margin-bottom: 3px;
+        }
+        
+        .info-icon {
+            margin-right: 5px;
+            font-style: normal;
+        }
+        
+        .input-with-button {
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-with-button input {
+            flex: 1;
+        }
+        
+        .map-helper-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .map-helper-buttons button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .map-helper-buttons button:first-child {
+            background-color: #28a745;
+            color: white;
+            border: 1px solid #28a745;
+        }
+        
+        .map-helper-buttons button:first-child:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+        
+        .map-helper-buttons button:last-child {
+            background-color: #6c757d;
+            color: white;
+            border: 1px solid #6c757d;
+        }
+        
+        .map-helper-buttons button:last-child:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
     </style>
 </head>
 <body>
@@ -1921,12 +2070,41 @@
         // Global function for Google Maps initialization
         window.initMap = function() {
             console.log("Google Maps API loaded");
+            // Dispatch custom event to notify our components that Google Maps is ready
+            try {
+                window.dispatchEvent(new Event('google-maps-loaded'));
+                console.log("google-maps-loaded event dispatched");
+                
+                // As a backup, set a global flag
+                window.googleMapsLoaded = true;
+            } catch (error) {
+                console.error("Error dispatching Google Maps loaded event:", error);
+            }
         };
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnRL1By1nSeEmOJmGKM6O62NLHjA0WSZM&callback=initMap" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnRL1By1nSeEmOJmGKM6O62NLHjA0WSZM&libraries=places&callback=initMap" defer></script>
     
     <!-- Application code -->
     <script type="text/babel">
+        // Global helper function to edit client from map
+        window.editClientFromMap = function(clientId) {
+            try {
+                console.log("Editing client from map:", clientId);
+                const STORAGE_KEY = 'royal_tree_clients';
+                const clients = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                const client = clients.find(c => c.id === clientId);
+                
+                if (client && window.setCurrentClient && window.setIsClientModalOpen) {
+                    window.setCurrentClient(client);
+                    window.setIsClientModalOpen(true);
+                } else {
+                    console.error("Client not found or global functions unavailable");
+                }
+            } catch (error) {
+                console.error("Error editing client from map:", error);
+            }
+        };
+        
         // Define window properties using JSDoc
         /**
          * @typedef {Object} WindowExtensions
@@ -2342,19 +2520,72 @@
          * Client form component
          */
         const ClientForm = ({ client, onSubmit, onCancel }) => {
+            // Helper function to format date from ISO to YYYY-MM-DD for input fields
+            const formatDateForInput = (dateString) => {
+                if (!dateString) return '';
+                try {
+                    const date = new Date(dateString);
+                    if (isNaN(date.getTime())) return ''; // Invalid date
+                    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+                } catch (error) {
+                    console.error('Error formatting date:', error);
+                    return '';
+                }
+            };
+
+            // Helper function to extract parts from full name
+            const splitName = (fullName) => {
+                if (!fullName) return { firstName: '', lastName: '' };
+                const parts = fullName.trim().split(' ');
+                if (parts.length === 1) return { firstName: parts[0], lastName: '' };
+                const lastName = parts.pop();
+                const firstName = parts.join(' ');
+                return { firstName, lastName };
+            };
+
+            // Helper function to extract address parts
+            const parseAddress = (fullAddress) => {
+                if (!fullAddress) return { 
+                    streetAddress: '', 
+                    town: '', 
+                    province: '', 
+                    postalCode: '' 
+                };
+                
+                // Simple parsing logic
+                const parts = fullAddress.split(',').map(part => part.trim());
+                
+                return {
+                    streetAddress: parts[0] || '',
+                    town: parts.length > 1 ? parts[1] : '',
+                    province: parts.length > 2 ? parts[2] : '',
+                    postalCode: parts.length > 3 ? parts[3] : ''
+                };
+            };
+
+            // Parse existing name and address if updating a client
+            const { firstName, lastName } = splitName(client?.name);
+            const { streetAddress, town, province, postalCode } = parseAddress(client?.address);
+
             const initialFormState = {
-                name: client?.name || '',
+                firstName: firstName || '',
+                lastName: lastName || '',
                 email: client?.email || '',
                 phone: client?.phone || '',
-                address: client?.address || '',
+                streetAddress: streetAddress || '',
+                town: town || '',
+                province: province || '',
+                postalCode: postalCode || '',
+                latitude: client?.latitude || '',
+                longitude: client?.longitude || '',
                 serviceNeeds: client?.serviceNeeds || '',
                 locationDetails: client?.locationDetails || '',
                 quoteAmount: client?.quoteAmount || '',
                 quoteCost: client?.quoteCost || '',
-                scheduledDate: client?.scheduledDate ? new Date(client.scheduledDate).toLocaleDateString('en-US', {year: 'numeric', month: 'numeric', day: 'numeric'}).split('/').map(n => n.padStart(2, '0')).reverse().join('-') : '',
+                scheduledDate: formatDateForInput(client?.scheduledDate),
                 status: client?.status || 'New',
                 priority: client?.priority || 'Medium',
-                inquiryDate: client?.inquiryDate ? new Date(client.inquiryDate).toLocaleDateString('en-US', {year: 'numeric', month: 'numeric', day: 'numeric'}).split('/').map(n => n.padStart(2, '0')).reverse().join('-') : new Date().toLocaleDateString('en-US', {year: 'numeric', month: 'numeric', day: 'numeric'}).split('/').map(n => n.padStart(2, '0')).reverse().join('-'),
+                inquiryDate: formatDateForInput(client?.inquiryDate) || formatDateForInput(new Date()),
                 notes: client?.notes || '',
                 customFields: client?.customFields || {},
                 clientValue: client?.clientValue || "5"
@@ -2362,9 +2593,90 @@
             
             const [formData, setFormData] = useState(initialFormState);
             const [errors, setErrors] = useState({});
+            const addressInputRef = useRef(null);
+            const autocompleteRef = useRef(null);
+            const sessionTokenRef = useRef(null);
+            
+            // Initialize Google Places Autocomplete
+            useEffect(() => {
+                // Check if Google Maps and Places API is loaded
+                if (window.google && window.google.maps && window.google.maps.places && addressInputRef.current) {
+                    console.log('Initializing Places Autocomplete');
+                    
+                    // Create a new session token for better API usage
+                    sessionTokenRef.current = new google.maps.places.AutocompleteSessionToken();
+                    
+                    // Initialize the autocomplete
+                    autocompleteRef.current = new google.maps.places.Autocomplete(addressInputRef.current, {
+                        types: ['address'],
+                        componentRestrictions: { country: 'CA' },  // Restrict to Canadian addresses
+                        fields: ['address_components', 'geometry', 'formatted_address', 'place_id'],
+                        sessionToken: sessionTokenRef.current
+                    });
+                    
+                    // Handle place selection
+                    autocompleteRef.current.addListener('place_changed', () => {
+                        const place = autocompleteRef.current.getPlace();
+                        console.log('Place selected:', place);
+                        
+                        if (!place.geometry) {
+                            console.warn('No geometry found for selected place');
+                            return;
+                        }
+                        
+                        // Extract the coordinates
+                        const lat = place.geometry.location.lat();
+                        const lng = place.geometry.location.lng();
+                        
+                        // Extract address components
+                        let streetNumber = '';
+                        let route = '';
+                        let locality = '';
+                        let administrative_area_level_1 = '';
+                        let postal_code = '';
+                        
+                        for (const component of place.address_components) {
+                            const type = component.types[0];
+                            
+                            switch(type) {
+                                case 'street_number':
+                                    streetNumber = component.long_name;
+                                    break;
+                                case 'route':
+                                    route = component.long_name;
+                                    break;
+                                case 'locality':
+                                    locality = component.long_name;
+                                    break;
+                                case 'administrative_area_level_1':
+                                    administrative_area_level_1 = component.long_name;
+                                    break;
+                                case 'postal_code':
+                                    postal_code = component.long_name;
+                                    break;
+                            }
+                        }
+                        
+                        // Update form data with the extracted information
+                        setFormData(prev => ({
+                            ...prev,
+                            streetAddress: streetNumber ? `${streetNumber} ${route}` : route,
+                            town: locality,
+                            province: administrative_area_level_1,
+                            postalCode: postal_code,
+                            latitude: lat,
+                            longitude: lng
+                        }));
+                        
+                        console.log(`Address autocompleted with coordinates: [${lat}, ${lng}]`);
+                    });
+                }
+            }, [addressInputRef.current]);
             
             const handleChange = (e) => {
                 const { name, value } = e.target;
+                
+                // Ensure we're only updating the specific field that changed
                 setFormData(prev => ({
                     ...prev,
                     [name]: value
@@ -2377,13 +2689,22 @@
                         [name]: null
                     }));
                 }
+                
+                // Log form changes to help with debugging
+                console.log(`Field ${name} changed to: ${value}`);
             };
             
             const validateForm = () => {
                 const newErrors = {};
                 
-                if (!formData.name.trim()) {
-                    newErrors.name = 'Name is required';
+                // Validate first name
+                if (!formData.firstName.trim()) {
+                    newErrors.firstName = 'First name is required';
+                }
+                
+                // Validate last name
+                if (!formData.lastName.trim()) {
+                    newErrors.lastName = 'Last name is required';
                 }
                 
                 if (formData.email && !/^\S+@\S+\.\S+$/.test(formData.email)) {
@@ -2392,6 +2713,44 @@
                 
                 if (!formData.phone.trim()) {
                     newErrors.phone = 'Phone number is required';
+                }
+
+                // Validate street address
+                if (!formData.streetAddress.trim()) {
+                    newErrors.streetAddress = 'Street address is required';
+                }
+
+                // Detect if we have a rural address format
+                const hasRuralAddressFormat = /\d+\s+(rge|range|twp|township|rd|road)\s+rd/i.test(formData.streetAddress);
+                
+                // Validate town/city - make it optional for rural address formats
+                if (!formData.town.trim() && !hasRuralAddressFormat) {
+                    newErrors.town = 'Town/City is required (or use the rural address format)';
+                }
+                
+                // Validate coordinates if they are provided
+                if (formData.latitude) {
+                    const lat = parseFloat(formData.latitude);
+                    if (isNaN(lat) || lat < -90 || lat > 90) {
+                        newErrors.latitude = 'Latitude must be between -90 and 90';
+                    }
+                }
+                
+                if (formData.longitude) {
+                    const lng = parseFloat(formData.longitude);
+                    if (isNaN(lng) || lng < -180 || lng > 180) {
+                        newErrors.longitude = 'Longitude must be between -180 and 180';
+                    }
+                }
+                
+                // If coordinates are partially provided (only lat or only lng)
+                if ((formData.latitude && !formData.longitude) || (!formData.latitude && formData.longitude)) {
+                    if (!formData.longitude) {
+                        newErrors.longitude = 'Both latitude and longitude are required';
+                    }
+                    if (!formData.latitude) {
+                        newErrors.latitude = 'Both latitude and longitude are required';
+                    }
                 }
                 
                 setErrors(newErrors);
@@ -2402,7 +2761,199 @@
                 e.preventDefault();
                 
                 if (validateForm()) {
-                    onSubmit(formData);
+                    // Create a clean copy of the form data to submit
+                    const formDataToSubmit = { ...formData };
+                    
+                    // Combine first and last name for backward compatibility
+                    formDataToSubmit.name = `${formData.firstName} ${formData.lastName}`.trim();
+                    
+                    // Detect rural address format
+                    const isRuralAddress = /\d+\s+(rge|range|twp|township|rd|road)\s+rd/i.test(formData.streetAddress);
+                    
+                    // Combine address components, handling rural addresses specially
+                    let addressParts;
+                    
+                    if (isRuralAddress) {
+                        // For rural addresses, include province but town is optional
+                        addressParts = [
+                            formData.streetAddress,
+                            formData.town, // Include town if provided
+                            formData.province,
+                            formData.postalCode
+                        ].filter(Boolean); // Remove empty parts
+                        
+                        // Add 'Rural Address' metadata for display purposes
+                        formDataToSubmit.isRuralAddress = true;
+                        console.log('Submitting as rural address format');
+                    } else {
+                        // Standard address format
+                        addressParts = [
+                            formData.streetAddress,
+                            formData.town,
+                            formData.province,
+                            formData.postalCode
+                        ].filter(Boolean); // Remove empty parts
+                    }
+                    
+                    formDataToSubmit.address = addressParts.join(', ');
+
+                    // Convert latitude/longitude to numbers if they exist
+                    if (formData.latitude) {
+                        formDataToSubmit.latitude = parseFloat(formData.latitude);
+                    }
+                    
+                    if (formData.longitude) {
+                        formDataToSubmit.longitude = parseFloat(formData.longitude);
+                    }
+                    
+                    // Log form submission for debugging
+                    console.log('Submitting form with data:', formDataToSubmit);
+                    
+                    onSubmit(formDataToSubmit);
+                }
+            };
+            
+            // Geocode the address and update coordinates
+            const geocodeAddress = async () => {
+                try {
+                    // Create a full address string
+                    const fullAddress = buildAddressString();
+                    console.log('Attempting to geocode address:', fullAddress);
+                    
+                    if (!fullAddress.trim()) {
+                        alert('Please enter an address to geocode');
+                        return;
+                    }
+
+                    // First, try to validate the address with the Address Validation API
+                    try {
+                        const result = await validateAddress(fullAddress);
+                        if (result) {
+                            console.log('Address validated successfully:', result);
+                            // Update form fields with validated address if needed
+                            if (result.geocode && result.geocode.location) {
+                                const { latitude, longitude } = result.geocode.location;
+                                setFormData(prev => ({
+                                    ...prev,
+                                    latitude: latitude,
+                                    longitude: longitude
+                                }));
+                                console.log(`Coordinates from Address Validation: [${latitude}, ${longitude}]`);
+                                return;
+                            }
+                        }
+                    } catch (validationError) {
+                        console.warn('Address validation failed, falling back to geocoding:', validationError);
+                        // Continue with geocoding if validation fails
+                    }
+                    
+                    // Fallback to geocoding if validation didn't provide coordinates
+                    const geocoder = new google.maps.Geocoder();
+                    
+                    // Create a geocoding request with additional parameters for better accuracy
+                    const request = {
+                        address: fullAddress,
+                        componentRestrictions: {
+                            country: 'CA' // Restrict to Canada
+                        },
+                        region: 'ca'
+                    };
+                    
+                    geocoder.geocode(request, (results, status) => {
+                        if (status === google.maps.GeocoderStatus.OK && results && results.length > 0) {
+                            const location = results[0].geometry.location;
+                            console.log('Geocoding successful:', results[0]);
+                            
+                            // Store the place_id for future reference (can be useful for other API calls)
+                            const placeId = results[0].place_id;
+                            console.log('Place ID:', placeId);
+                            
+                            // Update the coordinates
+                            setFormData(prev => ({
+                                ...prev,
+                                latitude: location.lat(),
+                                longitude: location.lng()
+                            }));
+                            
+                            console.log(`Retrieved coordinates: [${location.lat()}, ${location.lng()}]`);
+                        } else {
+                            console.error('Geocoding failed:', status);
+                            alert('Could not geocode the address. Please enter coordinates manually.');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Error in geocoding process:', error);
+                    alert('An error occurred during geocoding. Please enter coordinates manually.');
+                }
+            };
+            
+            // Build a complete address string from the form data
+            const buildAddressString = () => {
+                const { streetAddress, town, province, postalCode } = formData;
+                
+                // Special handling for rural addresses
+                const isRuralAddress = /\d+\s+(rge|range|twp|township|rd|road)\s+rd/i.test(streetAddress);
+                
+                // For rural addresses, we want to include any reference points we have
+                // but we need less strict requirements for town
+                const parts = isRuralAddress 
+                    ? [
+                        streetAddress?.trim(),
+                        province?.trim(),
+                        'Canada', // Adding country for better geocoding accuracy
+                        postalCode?.trim()
+                      ].filter(Boolean)
+                    : [
+                        streetAddress?.trim(),
+                        town?.trim(),
+                        province?.trim(), 
+                        'Canada', // Adding country for better geocoding accuracy
+                        postalCode?.trim()
+                      ].filter(Boolean);
+                
+                const addressString = parts.join(', ');
+                console.log(`Building address string: ${addressString} (rural format: ${isRuralAddress})`);
+                return addressString;
+            };
+            
+            // Validate address using Google's Address Validation API
+            const validateAddress = async (addressString) => {
+                try {
+                    // Note: This is a placeholder for the Address Validation API call
+                    // In a production environment, this would be a server-side API call
+                    // For demonstration purposes, we're showing the structure
+                    console.log('Address validation would call the API with:', addressString);
+                    
+                    // In production, you would make a fetch call like:
+                    /*
+                    const response = await fetch('https://addressvalidation.googleapis.com/v1:validateAddress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Goog-Api-Key': 'YOUR_API_KEY',
+                            'X-Goog-FieldMask': 'result.address.formattedAddress,result.geocode.location,result.verdict.addressComplete'
+                        },
+                        body: JSON.stringify({
+                            address: {
+                                regionCode: 'CA',
+                                addressLines: [addressString]
+                            }
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`Address validation API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    return data.result;
+                    */
+                    
+                    // For now, return null to fall back to geocoding
+                    return null;
+                } catch (error) {
+                    console.error('Address validation error:', error);
+                    return null;
                 }
             };
             
@@ -2410,19 +2961,35 @@
                 <form onSubmit={handleSubmit}>
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="name">Name *</label>
+                            <label htmlFor="firstName">First Name *</label>
                             <input
                                 type="text"
-                                id="name"
-                                name="name"
-                                value={formData.name}
+                                id="firstName"
+                                name="firstName"
+                                value={formData.firstName}
                                 onChange={handleChange}
                                 aria-required="true"
-                                aria-invalid={errors.name ? 'true' : 'false'}
+                                aria-invalid={errors.firstName ? 'true' : 'false'}
                             />
-                            {errors.name && <div className="form-error">{errors.name}</div>}
+                            {errors.firstName && <div className="error-message">{errors.firstName}</div>}
                         </div>
                         
+                        <div className="form-group">
+                            <label htmlFor="lastName">Last Name *</label>
+                            <input
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.lastName ? 'true' : 'false'}
+                            />
+                            {errors.lastName && <div className="error-message">{errors.lastName}</div>}
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
                         <div className="form-group">
                             <label htmlFor="email">Email</label>
                             <input
@@ -2433,11 +3000,9 @@
                                 onChange={handleChange}
                                 aria-invalid={errors.email ? 'true' : 'false'}
                             />
-                            {errors.email && <div className="form-error">{errors.email}</div>}
+                            {errors.email && <div className="error-message">{errors.email}</div>}
                         </div>
-                    </div>
-                    
-                    <div className="form-row">
+                        
                         <div className="form-group">
                             <label htmlFor="phone">Phone *</label>
                             <input
@@ -2449,43 +3014,173 @@
                                 aria-required="true"
                                 aria-invalid={errors.phone ? 'true' : 'false'}
                             />
-                            {errors.phone && <div className="form-error">{errors.phone}</div>}
+                            {errors.phone && <div className="error-message">{errors.phone}</div>}
+                        </div>
+                    </div>
+                    
+                    <h3>Address Information</h3>
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="streetAddress">Street Address *</label>
+                            <input
+                                type="text"
+                                id="streetAddress"
+                                name="streetAddress"
+                                value={formData.streetAddress}
+                                onChange={handleChange}
+                                aria-required="true"
+                                aria-invalid={errors.streetAddress ? 'true' : 'false'}
+                                placeholder="123 Main St"
+                                ref={addressInputRef}
+                            />
+                            {errors.streetAddress && <div className="error-message">{errors.streetAddress}</div>}
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="town">Town/City <span className="optional-label">(Optional for rural addresses)</span></label>
+                            <input
+                                type="text"
+                                id="town"
+                                name="town"
+                                value={formData.town}
+                                onChange={handleChange}
+                                aria-invalid={errors.town ? 'true' : 'false'}
+                                placeholder="Anytown or leave blank for rural addresses"
+                            />
+                            {errors.town && <div className="error-message">{errors.town}</div>}
                         </div>
                         
                         <div className="form-group">
-                            <label htmlFor="address">Address</label>
+                            <label htmlFor="province">Province/State</label>
+                            <select
+                                id="province"
+                                name="province"
+                                value={formData.province}
+                                onChange={handleChange}
+                            >
+                                <option value="">Select Province/State</option>
+                                {/* Canadian Provinces */}
+                                <option value="Alberta">Alberta</option>
+                                <option value="British Columbia">British Columbia</option>
+                                <option value="Manitoba">Manitoba</option>
+                                <option value="New Brunswick">New Brunswick</option>
+                                <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+                                <option value="Nova Scotia">Nova Scotia</option>
+                                <option value="Ontario">Ontario</option>
+                                <option value="Prince Edward Island">Prince Edward Island</option>
+                                <option value="Quebec">Quebec</option>
+                                <option value="Saskatchewan">Saskatchewan</option>
+                                
+                                {/* Canadian Territories */}
+                                <option value="Northwest Territories">Northwest Territories</option>
+                                <option value="Nunavut">Nunavut</option>
+                                <option value="Yukon">Yukon</option>
+                                
+                                {/* Common US States */}
+                                <option value="Alabama">Alabama</option>
+                                <option value="Alaska">Alaska</option>
+                                <option value="Arizona">Arizona</option>
+                                <option value="California">California</option>
+                                <option value="Colorado">Colorado</option>
+                                <option value="Florida">Florida</option>
+                                <option value="Georgia">Georgia</option>
+                                <option value="Hawaii">Hawaii</option>
+                                <option value="Idaho">Idaho</option>
+                                <option value="Illinois">Illinois</option>
+                                <option value="Michigan">Michigan</option>
+                                <option value="New York">New York</option>
+                                <option value="Texas">Texas</option>
+                                <option value="Washington">Washington</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div className="form-row">
+                        <div className="form-group">
+                            <label htmlFor="postalCode">Postal/Zip Code</label>
                             <input
                                 type="text"
-                                id="address"
-                                name="address"
-                                value={formData.address}
+                                id="postalCode"
+                                name="postalCode"
+                                value={formData.postalCode}
                                 onChange={handleChange}
+                                placeholder="A1A 1A1"
                             />
                         </div>
                     </div>
                     
                     <div className="form-row">
                         <div className="form-group">
-                            <label htmlFor="serviceNeeds">Service Needs</label>
-                            <input
-                                type="text"
-                                id="serviceNeeds"
-                                name="serviceNeeds"
-                                value={formData.serviceNeeds}
-                                onChange={handleChange}
-                            />
+                            <label htmlFor="latitude">Latitude (Optional)</label>
+                            <div className="input-with-button">
+                                <input
+                                    type="number"
+                                    id="latitude"
+                                    name="latitude"
+                                    value={formData.latitude || ""}
+                                    onChange={handleChange}
+                                    placeholder="43.651070"
+                                    step="0.000001"
+                                />
+                            </div>
+                            <small>Manually enter coordinates or use address for map placement</small>
                         </div>
                         
                         <div className="form-group">
-                            <label htmlFor="locationDetails">Location Details</label>
-                            <input
-                                type="text"
-                                id="locationDetails"
-                                name="locationDetails"
-                                value={formData.locationDetails}
-                                onChange={handleChange}
-                            />
+                            <label htmlFor="longitude">Longitude (Optional)</label>
+                            <div className="input-with-button">
+                                <input
+                                    type="number"
+                                    id="longitude"
+                                    name="longitude"
+                                    value={formData.longitude || ""}
+                                    onChange={handleChange}
+                                    placeholder="-79.347015"
+                                    step="0.000001"
+                                />
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div className="form-coordinate-note">
+                        <small>
+                            <i className="info-icon">ℹ️</i> 
+                            <strong>Coordinate Tips:</strong>
+                            <ul>
+                                <li>Enter coordinates manually or use the button below to generate them from your address.</li>
+                                <li>Latitude values range from -90 to 90 (positive in North America).</li>
+                                <li>Longitude values range from -180 to 180 (negative in North America).</li>
+                                <li>Having accurate coordinates ensures precise map placement.</li>
+                            </ul>
+                        </small>
+                    </div>
+                    
+                    <div className="form-group map-helper-buttons">
+                        <button 
+                            type="button" 
+                            className="secondary sm"
+                            onClick={geocodeAddress}
+                        >
+                            Get Coordinates from Address
+                        </button>
+                        
+                        <button 
+                            type="button" 
+                            className="secondary sm"
+                            onClick={() => {
+                                // Reset the coordinates
+                                setFormData(prev => ({
+                                    ...prev,
+                                    latitude: "",
+                                    longitude: ""
+                                }));
+                            }}
+                        >
+                            Clear Coordinates
+                        </button>
                     </div>
                     
                     <div className="form-row">
@@ -2576,6 +3271,7 @@
                                 name="inquiryDate"
                                 value={formData.inquiryDate}
                                 onChange={handleChange}
+                                max={new Date().toISOString().split('T')[0]} // Can't be future date
                             />
                         </div>
                         
@@ -2589,6 +3285,30 @@
                                 onChange={handleChange}
                             />
                         </div>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label htmlFor="serviceNeeds">Service Needs</label>
+                        <textarea
+                            id="serviceNeeds"
+                            name="serviceNeeds"
+                            rows="2"
+                            value={formData.serviceNeeds}
+                            onChange={handleChange}
+                            placeholder="Describe the tree services needed"
+                        ></textarea>
+                    </div>
+                    
+                    <div className="form-group">
+                        <label htmlFor="locationDetails">Location Details</label>
+                        <textarea
+                            id="locationDetails"
+                            name="locationDetails"
+                            rows="2"
+                            value={formData.locationDetails}
+                            onChange={handleChange}
+                            placeholder="Access information, special instructions, etc."
+                        ></textarea>
                     </div>
                     
                     <div className="form-group">
@@ -3355,19 +4075,65 @@
             const handleClientSubmit = (formData) => {
                 console.log('Submitting client form data:', formData);
                 
+                // Create a clean copy of form data to prevent reference issues
+                const clientData = { ...formData };
+                
+                // Validate dates to ensure they're in proper format
+                if (clientData.scheduledDate) {
+                    // Ensure date is valid
+                    try {
+                        const date = new Date(clientData.scheduledDate);
+                        if (!isNaN(date.getTime())) {
+                            // Valid date, normalize to ISO format if needed
+                            clientData.scheduledDate = clientData.scheduledDate;
+                        } else {
+                            console.error('Invalid scheduled date format:', clientData.scheduledDate);
+                            showToast('Invalid scheduled date format', 'error');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Error processing scheduled date:', error);
+                        showToast('Error processing scheduled date', 'error');
+                        return;
+                    }
+                }
+                
+                // Also validate inquiry date
+                if (clientData.inquiryDate) {
+                    try {
+                        const date = new Date(clientData.inquiryDate);
+                        if (!isNaN(date.getTime())) {
+                            // Valid date, normalize to ISO format if needed
+                            clientData.inquiryDate = clientData.inquiryDate;
+                        } else {
+                            console.error('Invalid inquiry date format:', clientData.inquiryDate);
+                            showToast('Invalid inquiry date format', 'error');
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Error processing inquiry date:', error);
+                        showToast('Error processing inquiry date', 'error');
+                        return;
+                    }
+                } else {
+                    // If no inquiry date is provided, use the current date
+                    clientData.inquiryDate = new Date().toISOString().split('T')[0];
+                }
+                
                 if (currentClient) {
                     // Update existing client
-                    const updated = Database.update(currentClient.id, formData);
+                    const updated = Database.update(currentClient.id, clientData);
                     if (updated) {
                         loadClients();
                         showToast('Client updated successfully', 'success');
                         setIsClientModalOpen(false);
+                        setCurrentClient(null); // Clear current client
                     } else {
                         showToast('Failed to update client', 'error');
                     }
                 } else {
                     // Add new client
-                    const added = Database.add(formData);
+                    const added = Database.add(clientData);
                     if (added) {
                         loadClients();
                         showToast('Client added successfully', 'success');
@@ -3760,6 +4526,7 @@
                         title={currentClient ? 'Edit Client' : 'Add New Client'}
                         isOpen={isClientModalOpen}
                         onClose={() => {
+                            console.log('Closing client modal and cleaning up');
                             setIsClientModalOpen(false);
                             setCurrentClient(null);
                         }}
@@ -3768,6 +4535,7 @@
                                 client={currentClient}
                                 onSubmit={handleClientSubmit}
                                 onCancel={() => {
+                                    console.log('Cancelling client form and cleaning up');
                                     setIsClientModalOpen(false);
                                     setCurrentClient(null);
                                 }}
@@ -5088,49 +5856,96 @@
             const [filteredStatus, setFilteredStatus] = useState('all');
             const mapRef = useRef(null);
             
-            // Initialize the map once the component mounts
-            useEffect(() => {
-                if (typeof google !== 'undefined' && mapRef.current && !mapInstance) {
-                    const mapOptions = {
-                        center: { lat: 39.8283, lng: -98.5795 }, // Center of the US as default
-                        zoom: 4,
-                        mapTypeId: google.maps.MapTypeId.ROADMAP,
-                        mapTypeControl: true,
-                        streetViewControl: false,
-                        styles: [
-                            {
-                                featureType: "poi",
-                                elementType: "labels",
-                                stylers: [{ visibility: "off" }]
-                            }
-                        ]
-                    };
-                    
-                    const newMap = new google.maps.Map(mapRef.current, mapOptions);
-                    setMapInstance(newMap);
-                    setIsLoaded(true);
-                }
-            }, [mapRef.current, google]);
-            
             // Function to geocode addresses
             const geocodeAddress = async (address) => {
                 return new Promise((resolve, reject) => {
-                    const geocoder = new google.maps.Geocoder();
-                    geocoder.geocode({ address }, (results, status) => {
-                        if (status === 'OK') {
-                            resolve(results[0].geometry.location);
-                        } else {
-                            console.warn(`Geocoding failed for address: ${address}. Status: ${status}`);
+                    if (!address) {
+                        console.error('Empty address provided to geocoder');
+                        resolve(null);
+                        return;
+                    }
+
+                    try {
+                        if (!google || !google.maps || !google.maps.Geocoder) {
+                            console.error('Google Maps Geocoder not available');
                             resolve(null);
+                            return;
                         }
-                    });
+                        
+                        const geocoder = new google.maps.Geocoder();
+                        
+                        console.log(`Sending to geocoder: "${address}"`);
+                        
+                        geocoder.geocode({ address }, (results, status) => {
+                            if (status === 'OK' && results && results.length > 0) {
+                                resolve(results[0].geometry.location);
+                            } else {
+                                console.warn(`Geocoding failed for address: "${address}". Status: ${status}`);
+                                
+                                // If the address came from our new structured format, it might have commas 
+                                // that confuse the geocoder. Try without commas.
+                                if (address.includes(',')) {
+                                    console.log('Attempting alternative address format...');
+                                    const simplifiedAddress = address.split(',').join(' ');
+                                    
+                                    geocoder.geocode({ address: simplifiedAddress }, (altResults, altStatus) => {
+                                        if (altStatus === 'OK' && altResults && altResults.length > 0) {
+                                            console.log('Alternative geocoding successful');
+                                            resolve(altResults[0].geometry.location);
+                                        } else {
+                                            console.warn(`Alternative geocoding also failed. Status: ${altStatus}`);
+                                            resolve(null);
+                                        }
+                                    });
+                                } else {
+                                    resolve(null);
+                                }
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error in geocodeAddress:', error);
+                        resolve(null);
+                    }
                 });
             };
+            
+            // Initialize the map once the component mounts
+            useEffect(() => {
+                try {
+                    if (typeof google !== 'undefined' && google && google.maps && mapRef.current && !mapInstance) {
+                        console.log('Initializing Google Map...');
+                        
+                        const mapOptions = {
+                            center: { lat: 39.8283, lng: -98.5795 }, // Center of the US as default
+                            zoom: 4,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP,
+                            mapTypeControl: true,
+                            streetViewControl: false,
+                            styles: [
+                                {
+                                    featureType: "poi",
+                                    elementType: "labels",
+                                    stylers: [{ visibility: "off" }]
+                                }
+                            ]
+                        };
+                        
+                        const newMap = new google.maps.Map(mapRef.current, mapOptions);
+                        setMapInstance(newMap);
+                        setIsLoaded(true);
+                        console.log('Google Map initialized successfully');
+                    }
+                } catch (error) {
+                    console.error('Error initializing Google Map:', error);
+                }
+            }, [mapRef.current, google]);
             
             // Add markers when clients change or map is loaded
             useEffect(() => {
                 const plotMarkers = async () => {
                     if (isLoaded && mapInstance && clients.length > 0) {
+                        console.log(`Attempting to plot ${clients.length} clients on map`);
+                        
                         // Remove existing markers
                         markers.forEach(marker => marker.setMap(null));
                         setMarkers([]);
@@ -5144,18 +5959,49 @@
                         
                         // Filter clients based on current filters
                         const filteredClients = clients.filter(client => {
+                            const hasAddress = client.address && client.address.trim() !== '';
+                            const hasCoordinates = typeof client.latitude === 'number' && 
+                                                  typeof client.longitude === 'number' && 
+                                                  !isNaN(client.latitude) && 
+                                                  !isNaN(client.longitude);
+                            
+                            if (!hasAddress && !hasCoordinates) {
+                                console.log(`Client ${client.name} has no address or coordinates`);
+                            }
+                            
                             return (filteredPriority === 'all' || client.priority === filteredPriority) && 
                                    (filteredStatus === 'all' || client.status === filteredStatus) &&
-                                   client.address; // Make sure there's an address
+                                   (hasAddress || hasCoordinates);
                         });
+                        
+                        console.log(`After filtering, ${filteredClients.length} clients to display on map`);
                         
                         // Plot each client's address as a marker
                         for (const client of filteredClients) {
-                            if (!client.address) continue;
+                            console.log(`Processing client for map: ${client.name}`);
                             
                             try {
-                                const location = await geocodeAddress(client.address);
+                                let location = null;
+                                
+                                // First check if we have latitude/longitude coordinates
+                                if (typeof client.latitude === 'number' && typeof client.longitude === 'number' && 
+                                    !isNaN(client.latitude) && !isNaN(client.longitude)) {
+                                    console.log(`Using stored coordinates for ${client.name}: [${client.latitude}, ${client.longitude}]`);
+                                    location = new google.maps.LatLng(client.latitude, client.longitude);
+                                }
+                                // Otherwise try geocoding the address
+                                else if (client.address) {
+                                    console.log(`No coordinates for ${client.name}, attempting to geocode address: ${client.address}`);
+                                    location = await geocodeAddress(client.address);
+                                }
+                                else {
+                                    console.log(`Client ${client.name} has neither coordinates nor address`);
+                                    continue;
+                                }
+                                
                                 if (location) {
+                                    console.log(`Successfully located ${client.name} on the map`);
+                                    
                                     // Determine marker color based on priority
                                     const priorityColor = {
                                         'Urgent': '#e53935', // danger-color
@@ -5180,15 +6026,25 @@
                                         animation: google.maps.Animation.DROP
                                     });
                                     
+                                    // Format the address parts for display
+                                    const formatAddressParts = (address) => {
+                                        if (!address) return '';
+                                        const parts = address.split(',').map(part => part.trim());
+                                        return parts.join('<br>');
+                                    };
+                                    
                                     // Add client info to marker for info window
                                     const contentString = `
                                         <div class="info-window">
                                             <h3>${client.name}</h3>
-                                            <p><strong>Address:</strong> ${client.address}</p>
+                                            <p><strong>Address:</strong><br> ${formatAddressParts(client.address)}</p>
+                                            ${client.latitude && client.longitude ? 
+                                              `<p><strong>Coordinates:</strong> [${client.latitude.toFixed(6)}, ${client.longitude.toFixed(6)}]</p>` : ''}
                                             <p><strong>Phone:</strong> ${client.phone}</p>
                                             <p><strong>Status:</strong> ${client.status}</p>
                                             <p><strong>Priority:</strong> ${client.priority}</p>
                                             ${client.scheduledDate ? `<p><strong>Scheduled:</strong> ${new Date(client.scheduledDate).toLocaleDateString()}</p>` : ''}
+                                            <p><button onclick="editClientFromMap('${client.id}')">Edit Client</button></p>
                                         </div>
                                     `;
                                     
@@ -5211,6 +6067,8 @@
                                     bounds.extend(location);
                                     hasValidMarkers = true;
                                     newMarkers.push(marker);
+                                } else {
+                                    console.warn(`Could not geocode address for ${client.name}: ${client.address}`);
                                 }
                             } catch (error) {
                                 console.error(`Error plotting marker for ${client.name}:`, error);
@@ -5218,6 +6076,7 @@
                         }
                         
                         setMarkers(newMarkers);
+                        console.log(`Added ${newMarkers.length} markers to the map`);
                         
                         // Fit map to bounds if we have valid markers
                         if (hasValidMarkers && newMarkers.length > 0) {
@@ -5230,6 +6089,11 @@
                                 }
                                 google.maps.event.removeListener(listener);
                             });
+                        } else {
+                            console.warn('No valid markers to display on map');
+                            // Reset to default view if no markers
+                            mapInstance.setCenter({ lat: 39.8283, lng: -98.5795 });
+                            mapInstance.setZoom(4);
                         }
                     }
                 };
@@ -5248,6 +6112,8 @@
             
             // Add this check before using Google APIs
             useEffect(() => {
+                console.log('Setting up Google Maps event listener');
+                
                 const handleMapsLoaded = () => {
                     console.log("Maps loaded event received");
                     setIsLoaded(true);
@@ -5255,9 +6121,26 @@
                 
                 // Check if already loaded
                 if (window.google && window.google.maps) {
+                    console.log('Google Maps already available');
                     setIsLoaded(true);
                 } else {
+                    console.log('Waiting for Google Maps to load...');
                     window.addEventListener('google-maps-loaded', handleMapsLoaded);
+                    
+                    // As a backup, check for Google Maps availability every second
+                    const checkInterval = setInterval(() => {
+                        if (window.google && window.google.maps) {
+                            console.log('Google Maps detected through interval check');
+                            clearInterval(checkInterval);
+                            setIsLoaded(true);
+                            window.removeEventListener('google-maps-loaded', handleMapsLoaded);
+                        }
+                    }, 1000);
+                    
+                    // Clear interval after 10 seconds to prevent memory leaks
+                    setTimeout(() => {
+                        clearInterval(checkInterval);
+                    }, 10000);
                 }
                 
                 return () => {
@@ -5302,6 +6185,12 @@
                     ) : (
                         <>
                             <div ref={mapRef} className="client-map"></div>
+                            
+                            {markers.length === 0 && clients.length > 0 && (
+                                <div className="map-error-message">
+                                    No clients found with valid location information. Please ensure clients have either complete address information or latitude/longitude coordinates.
+                                </div>
+                            )}
                             
                             <div className="map-legend">
                                 <div className="map-legend-item">
